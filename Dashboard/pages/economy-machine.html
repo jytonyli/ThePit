@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>⚙️ 经济机器怎么运转</title>
+ <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23fbbf24'/%3E%3Cpath d='M12 44 L26 28 L36 36 L52 14' stroke='%23161616' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+ <style>
+
+ * { margin: 0; padding: 0; box-sizing: border-box; }
+ html { scroll-behavior: smooth; }
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+ color: #eaeaea; line-height: 1.75; font-size: 17px;
+ background-color: #161616;
+ background-image:
+ radial-gradient(1000px 700px at 8% -10%, rgba(251,191,36,0.16), transparent 55%),
+ radial-gradient(900px 700px at 96% 5%, rgba(52,211,153,0.12), transparent 55%);
+ background-attachment: fixed;
+ }
+ .mono { font-family: 'SF Mono', 'Roboto Mono', Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+ .nav {
+ background: rgba(22,22,22,0.45); backdrop-filter: blur(24px) saturate(1.6);
+ -webkit-backdrop-filter: blur(24px) saturate(1.6);
+ border-bottom: 1px solid rgba(255,255,255,0.12);
+ padding: 20px 36px; display: flex; align-items: center; justify-content: space-between;
+ position: sticky; top: 0; z-index: 100;
+ }
+ .nav-brand { font-size: 24px; font-weight: 700; color: #fbbf24; }
+ .nav-links { display: flex; gap: 28px; }
+ .nav-links a { color: #9a9a9a; text-decoration: none; font-size: 17px; padding: 10px 18px; border-radius: 8px; transition: all 0.2s; }
+ .nav-links a:hover, .nav-links a.active { color: #fbbf24; background: rgba(255,255,255,0.08); }
+ .container { max-width: 1300px; margin: 0 auto; padding: 36px; }
+ .status-banner {
+ background: rgba(38,38,38,0.38); backdrop-filter: blur(18px) saturate(1.4);
+ -webkit-backdrop-filter: blur(18px) saturate(1.4);
+ border: 1px solid rgba(255,255,255,0.13); border-radius: 16px;
+ padding: 24px 28px; margin-bottom: 28px; box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+ display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+ }
+ .status-item { font-size: 16px; color: #9a9a9a; }
+ .status-item strong { color: #eaeaea; font-size: 17px; }
+ .card {
+ background: rgba(38,38,38,0.38); backdrop-filter: blur(18px) saturate(1.4);
+ -webkit-backdrop-filter: blur(18px) saturate(1.4);
+ border: 1px solid rgba(255,255,255,0.13); border-radius: 16px;
+ padding: 32px; margin-bottom: 28px; box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+ }
+ .card-title { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+ .card-sub { font-size: 15px; color: #9a9a9a; margin-bottom: 22px; }
+ .section-subtitle { font-size: 17px; color: #9a9a9a; margin: 22px 0 14px; font-weight: 500; }
+ table { width: 100%; border-collapse: collapse; font-size: 15px; table-layout: fixed; margin: 14px 0; }
+ th { text-align: left; padding: 14px 16px; color: #9a9a9a; font-weight: 500; border-bottom: 2px solid rgba(255,255,255,0.12); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+ td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); vertical-align: top; }
+ tr:last-child td { border-bottom: none; }
+ tr:hover { background: rgba(255,255,255,0.04); }
+ .green { color: #34d399; } .red { color: #f87171; } .yellow { color: #fbbf24; } .orange { color: #fb923c; }
+ .highlight-block {
+ background: rgba(251,191,36,0.08); border-left: 4px solid #fbbf24;
+ padding: 18px 22px; border-radius: 0 10px 10px 0; margin: 16px 0;
+ font-size: 15px; line-height: 1.8;
+ }
+ .highlight-block.red { background: rgba(248,113,113,0.08); border-left-color: #f87171; }
+ .highlight-block.green { background: rgba(52,211,153,0.08); border-left-color: #34d399; }
+ .highlight-block.orange { background: rgba(251,146,60,0.08); border-left-color: #fb923c; }
+ .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin: 14px 0; }
+ .flow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin: 18px 0; }
+ .flow-step {
+ background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+ border-radius: 10px; padding: 12px 10px; text-align: center; font-size: 14px; line-height: 1.5;
+ }
+ .flow-step .step-no { display: block; font-size: 12px; color: #fbbf24; font-weight: 700; margin-bottom: 4px; }
+ .flow-step .step-asset { display: block; margin-top: 6px; font-size: 13px; color: #9a9a9a; }
+ .vflow { display: grid; grid-template-columns: 28px 1fr; gap: 0 14px; margin: 18px 0; }
+ .vflow .dot { justify-self: center; width: 14px; height: 14px; border-radius: 50%; background: #fbbf24; margin-top: 22px; }
+ .vflow .dot.red { background: #f87171; }
+ .vflow .dot.green { background: #34d399; }
+ .vflow .dot.orange { background: #fb923c; }
+ .vflow .node { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+ .vflow .node:last-child { border-bottom: none; }
+ .vflow .node-title { font-weight: 600; font-size: 16px; }
+ .vflow .node-desc { font-size: 14px; color: #9a9a9a; margin-top: 4px; }
+ .checklist { list-style: none; padding: 0; margin: 14px 0; }
+ .checklist li { padding: 10px 0 10px 28px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; position: relative; }
+ .checklist li:last-child { border-bottom: none; }
+ .checklist li::before { content: "\2022"; position: absolute; left: 6px; color: #fbbf24; }
+ .numbered { list-style: none; padding: 0; margin: 14px 0; counter-reset: item; }
+ .numbered li { padding: 8px 0 8px 34px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; position: relative; counter-increment: item; }
+ .numbered li:last-child { border-bottom: none; }
+ .numbered li::before { content: counter(item); position: absolute; left: 0; top: 10px; width: 22px; height: 22px; border-radius: 50%; background: rgba(251,191,36,0.15); color: #fbbf24; font-size: 13px; font-weight: 700; text-align: center; line-height: 22px; }
+ .quote-block { border-left: 3px solid rgba(255,255,255,0.25); padding: 6px 0 6px 20px; margin: 14px 0; color: #c8c8c8; font-style: italic; font-size: 15px; }
+ .chart-container { height: 320px; margin: 16px 0; }
+ .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+ .data-strip {
+ background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+ border-radius: 10px; padding: 12px 18px; margin: 14px 0;
+ font-family: 'SF Mono', 'Roboto Mono', Menlo, Consolas, monospace;
+ font-size: 14px; color: #9a9a9a; line-height: 1.9;
+ }
+ .data-strip .num { color: #fbbf24; font-weight: 700; }
+ .takeaway {
+ background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.35);
+ border-radius: 12px; padding: 18px 22px; margin: 16px 0;
+ font-size: 16px; line-height: 1.8;
+ }
+ .takeaway .label { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1px; color: #161616; background: #fbbf24; border-radius: 6px; padding: 2px 10px; margin-right: 10px; }
+ .so-what {
+ background: rgba(52,211,153,0.08); border-left: 4px solid #34d399;
+ border-radius: 0 12px 12px 0; padding: 18px 22px; margin: 22px 0 6px;
+ font-size: 15px; line-height: 1.8;
+ }
+ .so-what .label { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1px; color: #161616; background: #34d399; border-radius: 6px; padding: 2px 10px; margin-right: 10px; }
+ .chapter-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 4px; }
+ .chapter-no { font-size: 15px; color: #fbbf24; font-weight: 700; }
+ .scroll-top {
+ position: fixed; right: 24px; bottom: 28px; z-index: 90;
+ width: 46px; height: 46px; border-radius: 50%;
+ background: rgba(251,191,36,0.92); color: #161616;
+ border: none; cursor: pointer; font-size: 22px; font-weight: 700; line-height: 1;
+ box-shadow: 0 8px 24px rgba(0,0,0,0.45); opacity: 0; pointer-events: none;
+ transition: all 0.25s;
+ }
+ .chapter-nav { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0 24px; }
+ .chapter-nav a { color: #9a9a9a; text-decoration: none; font-size: 14px; padding: 8px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.05); transition: all 0.2s; }
+ .chapter-nav a.active { color: #fbbf24; border-color: rgba(251,191,36,0.5); background: rgba(251,191,36,0.08); }
+ .chapter-nav a:hover { color: #fbbf24; border-color: rgba(251,191,36,0.5); background: rgba(251,191,36,0.08); }
+ .footer-return { text-align: center; padding: 22px 0 28px; color: #9a9a9a; font-size: 14px; }
+ .footer-return a { text-decoration: none; }
+ .snapshot-badge {
+ display: inline-block; background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.4);
+ color: #fbbf24; border-radius: 999px; padding: 3px 12px; font-size: 13px; font-weight: 600;
+ }
+ .scroll-top.show { opacity: 1; pointer-events: auto; }
+ @media (max-width: 1024px) {
+ body { font-size: 16px; } .container { padding: 20px 16px; }
+ .nav { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
+ .nav-brand { font-size: 19px; } .nav-links { gap: 4px; flex-wrap: wrap; }
+ .nav-links a { font-size: 14px; padding: 7px 10px; }
+ .card { padding: 20px 16px; border-radius: 12px; margin-bottom: 18px; }
+ .card-title { font-size: 18px; }
+ table { font-size: 13px; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+ th { padding: 10px 8px; font-size: 11px; } td { padding: 10px 8px; }
+ .two-col, .chart-row { grid-template-columns: 1fr; }
+ .flow { grid-template-columns: repeat(3, 1fr); }
+ .chart-container { height: 240px; }
+ }
+ @media (max-width: 640px) {
+ body { font-size: 15px; line-height: 1.6; } .container { padding: 14px 10px; }
+ .nav { padding: 10px 12px; flex-direction: column; align-items: flex-start; gap: 6px; }
+ .nav-brand { font-size: 17px; }
+ .nav-links { width: 100%; gap: 2px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+ .nav-links a { font-size: 13px; padding: 6px 8px; white-space: nowrap; }
+ .card { padding: 16px 12px; border-radius: 10px; margin-bottom: 14px; }
+ .card-title { font-size: 16px; }
+ .highlight-block { padding: 12px 14px; font-size: 13px; margin: 10px 0; }
+ .flow { grid-template-columns: repeat(2, 1fr); }
+ .chart-container { height: 200px; }
+ .vflow { grid-template-columns: 22px 1fr; }
+ .scroll-top { width: 38px; height: 38px; right: 12px; bottom: 16px; font-size: 18px; opacity: 0.85; }
+ }
+ @media (max-width: 380px) { .flow { grid-template-columns: 1fr; } }
+ </style>
+</head>
+<body>
+ <nav class="nav">
+ <div class="nav-brand">🎛️ ThePit Investment Dashboard</div>
+ <div class="nav-links">
+ <a href="../Homepage.html">📊 每日数据</a>
+ <a href="holdings.html">💼 持仓详情</a>
+ <a href="news.html">📰 新闻周报</a>
+ <a href="calendar.html">📅 催化剂</a>
+ <a href="../notebook.html">📓 笔记本</a>
+ </div>
+ </nav>
+
+ <div class="container">
+ <div class="status-banner">
+ <div>
+ <div class="status-item" style="font-size:22px;font-weight:700;color:#eaeaea;">⚙️ 经济机器怎么运转</div>
+ <div class="status-item" style="margin-top:6px;">Dalio《经济机器是怎样运行的》(How The Economic Machine Works, 30 min 动画) 的核心。经济看似复杂，拆到底很简单——它由无数笔「交易」堆叠而成。</div>
+ </div>
+ <div>
+ <div class="status-item"><span class="snapshot-badge">⚠ 数据快照：2026-09-29 · 不随行情自动更新</span></div>
+ <div class="status-item" style="margin-top:8px;"><a href="principle-cycle-first.html" style="color:#fbbf24;">← 返回周期定位主页</a></div>
+ </div>
+ </div>
+
+ <div class="chapter-nav"><a href="principle-cycle-first.html" class="active" title="返回周期定位主页">⚙️ 经济机器</a><a href="productivity.html">📈 生产率</a><a href="short-term-cycle.html">🔄 短周期</a><a href="long-term-cycle.html">⏳ 长周期</a></div>
+
+<!-- ===== 02 经济机器 ===== -->
+ <div class="card" id="ch2">
+ <div class="card-title">⚙️ 经济机器怎么运转</div>
+
+ <div class="takeaway"><span class="label">本章结论</span><strong>经济 = 无数笔交易，但真正的主角是「信用」。</strong>它比货币大 17 倍、可以凭空创造；看懂经济先盯信用，而不是盯钱。美国 40 万亿债务之所以"还活着"，是因为靠信用不断滚动 + 印钞兜底——代价是长期债务周期越走越深。</div>
+ <div class="data-strip">📊 关键数据：美国信用总量 <span class="num">$50 万亿</span> vs 货币 <span class="num">$3 万亿</span>（94% 支出靠信用）｜ 联邦债务 <span class="num">$40 万亿</span> ｜ 10Y 美债 <span class="num">~5.27%</span>（20 年新高）｜ 10Y 实际利率 <span class="num">~2.4%</span>（98 分位）</div>
+
+ <h3 class="section-subtitle">🧱 一切从一笔交易开始</h3>
+ <ul class="checklist">
+ <li>任何市场（商品、股票、黄金、劳动力）都有<strong>买方</strong>和<strong>卖方</strong>。</li>
+ <li>一笔交易 = 用<strong>钱 (money)</strong> 或 <strong>信用 (credit)</strong> 交换商品/服务/金融资产。</li>
+ </ul>
+ <div class="highlight-block">
+ 价格由「总支出 ÷ 总交易量」决定：<br><br>
+ <strong class="mono">价格（Price）= 总支出 ÷ 总交易量</strong><br>
+ 其中 <em>总支出 = 花出去的钱（Money）+ 花出去的信用（Credit）</em>。
+ </div>
+ <div class="highlight-block green"><strong>关键洞察</strong>：<strong>支出比价格更重要</strong>。经济就是这台机器：一个人的支出 = 另一个人的收入。你多花 1 块，别人就多赚 1 块；别人多赚 1 块，他就能借更多、再花更多。</div>
+
+ <h3 class="section-subtitle">💳 为什么「信用」是主角</h3>
+ <ul class="checklist">
+ <li>大多数人交易用的不是钱，而是<strong>信用</strong>（信用卡、贷款、赊账）。</li>
+ <li><strong>数据</strong>：美国信用总量约 <strong class="yellow">$50 万亿</strong>，而真正的货币（钱）只有约 <strong>$3 万亿</strong>——信用是钱的 ~17 倍（约 94% 的支出靠信用）。</li>
+ <li>信用是<strong>可以凭空创造</strong>的：银行贷出去一笔钱，同时创造了等额存款。</li>
+ <li>信用扩张 → 支出↑ → 收入↑ → 抵押物升值 → 能借更多 → ……<span class="green">向上的自我强化</span>。</li>
+ <li>信用收缩 → 支出↓ → 收入↓ → 被迫卖出资产 → 价格跌 → ……<span class="red">这就是萧条</span>。</li>
+ </ul>
+ <div class="highlight-block orange">👉 想理解经济，<strong>盯住「信用」比盯住「钱」重要得多</strong>。相关：短期债务周期（04）。</div>
+
+ <h3 class="section-subtitle">🏔️ 三股力量叠加</h3>
+ <div class="quote-block">Dalio 把任何经济结果看成三条曲线的叠加。全景图见主页「🧭 一图看懂：周期定位」。</div>
+ <table>
+ <colgroup><col style="width:16%"><col style="width:20%"><col style="width:30%"><col style="width:34%"></colgroup>
+ <thead><tr><th>力量</th><th>周期</th><th>谁在驱动</th><th>详细页</th></tr></thead>
+ <tbody>
+ <tr><td>① 生产率</td><td>长期向上斜率</td><td>技术、教育、储蓄与投资</td><td><a href="productivity.html" style="color:#fbbf24;">📈 生产率长期增长 →</a></td></tr>
+ <tr><td>② 短期债务周期</td><td>5–8 年</td><td>央行加息/降息</td><td><a href="short-term-cycle.html" style="color:#fbbf24;">🔄 短期债务周期 →</a></td></tr>
+ <tr><td>③ 长期债务周期</td><td>50–75 年</td><td>债务累积到极限后的去杠杆</td><td><a href="long-term-cycle.html" style="color:#fbbf24;">⏳ 长期债务周期 →</a></td></tr>
+ </tbody>
+ </table>
+ <div class="highlight-block"><strong>新手和专家的区别</strong>：新手被短期波动牵着走；专家先问「现在处在哪个周期的哪个位置」。</div>
+
+ <h3 class="section-subtitle">📐 决策时的因果链模板</h3>
+ <div class="highlight-block mono">政策/冲击 → 信用扩张或收缩 → 支出变化 → 收入变化 → 资产价格 → 通胀/增长 → 政策再调整。</div>
+ <div class="so-what"><span class="label">所以呢？</span>
+ ① 盯<strong>信用</strong>而非利率表态：中国看社融是否起来（现在没起来 → 股票别激进）；美国看利率是否见顶（5.27% 高位 → 黄金逻辑还在）；<br>
+ ② 任何政策新闻先走因果链：<strong class="mono">政策 → 信用 → 支出 → 价格</strong>，跳一步就容易被标题党带偏；<br>
+ ③ 用「三股力量」定位每一天：问自己今天这个消息，压的是哪条曲线。</div>
+ </div>
+
+ <!-- Dalio 10年实际利率三情景 -->
+ <div class="card">
+ <div class="card-title">🔭 Dalio 框架：未来10年美国实际利率三情景（2026–2036）</div>
+ <div style="font-size:15px;color:#9a9a9a;margin-bottom:18px;">
+ 核心约束：当 <span class="mono" style="color:#fbbf24;">实际利率 &gt; 实际GDP增速</span>，存量债务/GDP 会自动复利上行。系统内生动力是把实际利率压到低于潜在增速——这是历史上大国化解巨额主权债务的通用路径（二战后美国路径）。
+ </div>
+ <table>
+ <colgroup><col style="width:18%"><col style="width:12%"><col style="width:24%"><col style="width:24%"><col style="width:22%"></colgroup>
+ <thead>
+ <tr><th>情景</th><th>概率(主观)</th><th>实际利率路径</th><th>机制</th><th>对黄金/美债含义</th></tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td><strong>① 有序财政调整</strong><br><span style="font-size:13px;color:#9a9a9a;">Dalio偏好方案</span></td>
+ <td class="mono yellow">~20%</td>
+ <td>未来10年逐步下行 ~100bp，最终稳定在 <span class="mono">0%–1%</span>（略低于潜在增速）</td>
+ <td>赤字压到GDP 3%附近，支出削减+增税+压低实际利率三管齐下；美联储配合，允许适度通胀稀释真实债务</td>
+ <td>温和通胀，名义利率回落但实际利率中枢下移；黄金受支撑，长债承压；债务缓慢消化</td>
+ </tr>
+ <tr>
+ <td><strong>② 政治僵持/不改革</strong><br><span style="font-size:13px;color:#9a9a9a;">基准风险情景</span></td>
+ <td class="mono orange">~60%</td>
+ <td>前3年实际利率<span class="red">阶段性冲高至2%附近</span>，随后被迫回落至 <span class="mono">0%甚至阶段性为负</span></td>
+ <td>国债供给暴增、海外买家不足→期限溢价上行→债务利息吞噬财政→<b>财政主导（fiscal dominance）</b>：美联储被迫印钱购债，通胀回升快于名义利率</td>
+ <td class="yellow">短期实际利率冲高=金价阵痛；中期实际利率被强行压低+美元购买力受损=黄金大赢家；长债是最大风险资产</td>
+ </tr>
+ <tr>
+ <td><strong>③ 通缩式债务危机</strong></td>
+ <td class="mono green">~10%</td>
+ <td>名义利率打到零附近，通胀大幅负增长，实际利率<span class="red">被动走高</span></td>
+ <td>经济深度萧条，债务通缩螺旋；现代主权货币国央行会在走到这步前印钞阻止，故概率低</td>
+ <td>通缩初期黄金也会被抛售变现，但央行救市后实际利率转负，黄金随后上涨</td>
+ </tr>
+ <tr>
+ <td><strong>④ 强劲财政整顿</strong><br><span style="font-size:13px;color:#9a9a9a;">尾部反向情景</span></td>
+ <td class="mono green">~10%</td>
+ <td>实际利率可在数年内维持 <span class="mono">2%+</span> 高位</td>
+ <td>政治意外达成加税+砍支出共识，财政可信度修复，美元信用短期回升</td>
+ <td>对黄金不利（持有黄金机会成本高），但这是Dalio框架下最不希望看到的"好"情景</td>
+ </tr>
+ </tbody>
+ </table>
+ <div class="highlight-block green" style="margin-top:20px;">
+ <strong>对本组合的含义</strong>：情景②概率最高 = "先阵痛，再压低实际利率"，而非平稳降息。当前实际利率2.44%的高位是在加速结局兑现，不是反面证据。紫金矿业（黄金+铜）作为黄金暴露载体，战略底仓15%不动；战术上等待实际利率见顶信号（长债拍卖疲软、美联储口头鸽转、利息支出/GDP过线）再加仓。
+ </div>
+ </div>
+
+ <div class="footer-return"><a href="principle-cycle-first.html" style="color:#fbbf24;">← 返回周期定位主页</a> · 🧭 一图看懂 · 2026 速览 · 怎么下注</div>
+ </div>
+
+ <button id="scrollTop" class="scroll-top" title="返回顶部">↑</button>
+ <script>
+ // 返回顶部 + 目录高亮
+ var scrollTopBtn = document.getElementById('scrollTop');
+ var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+ window.addEventListener('scroll', function() {
+ scrollTopBtn.classList.toggle('show', window.scrollY > 600);
+ var pos = window.scrollY + 140;
+ var current = 0;
+ tocLinks.forEach(function(link, i) {
+ var target = document.querySelector(link.getAttribute('href'));
+ if (target && target.offsetTop <= pos) current = i;
+ });
+ tocLinks.forEach(function(link, i) {
+ link.classList.toggle('active', i === current);
+ });
+ }, { passive: true });
+ scrollTopBtn.addEventListener('click', function() {
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+ });
+ </script>
+</body>
+</html>

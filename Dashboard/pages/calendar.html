@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>催化剂日历 - ThePit 每日数据</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a1a; color: #eaeaea; line-height: 1.7; font-size: 17px; }
+        .mono { font-family: 'SF Mono', 'Roboto Mono', Menlo, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .nav { background: #232323; border-bottom: 1px solid #2c2c2c; padding: 20px 36px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .nav-brand { font-size: 24px; font-weight: 700; color: #fbbf24; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a { color: #9a9a9a; text-decoration: none; font-size: 17px; padding: 10px 18px; border-radius: 8px; transition: color 0.2s, background 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: #fbbf24; background: #2c2c2c; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 36px; }
+        .status-banner { background: #232323; border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px 28px; margin-bottom: 28px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .status-item { font-size: 15px; color: #9a9a9a; }
+        .status-item strong { color: #eaeaea; }
+        .card { background: #232323; border: 1px solid #2c2c2c; border-radius: 16px; padding: 32px; margin-bottom: 28px; }
+        .card-title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
+        table { width: 100%; border-collapse: collapse; font-size: 16px; }
+        th { text-align: left; padding: 14px 16px; color: #9a9a9a; font-weight: 500; border-bottom: 2px solid #2c2c2c; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 16px 18px; border-bottom: 1px solid #2c2c2c; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #2c2c2c; }
+        .green { color: #34d399; }
+        .red { color: #f87171; }
+        .yellow { color: #fbbf24; }
+        .orange { color: #fb923c; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 14px; font-weight: 600; }
+        .badge-high { background: rgba(248,113,113,0.15); color: #f87171; }
+        .badge-medium { background: rgba(251,191,36,0.15); color: #fbbf24; }
+        .badge-low { background: rgba(52,211,153,0.15); color: #34d399; }
+        .today-row { background: rgba(251,191,36,0.08); }
+        .highlight-block { background: rgba(251,191,36,0.08); border-left: 4px solid #fbbf24; padding: 18px 22px; border-radius: 0 10px 10px 0; margin: 16px 0; font-size: 16px; line-height: 1.8; }
+        .highlight-block.red { background: rgba(248,113,113,0.08); border-left-color: #f87171; }
+    </style>
+    <link rel="stylesheet" href="../responsive.css?v=4">
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-brand">🎛️ ThePit Investment Dashboard</div>
+        <div class="nav-links">
+            <a href="../Homepage.html">📊 每日数据</a>
+            <a href="holdings.html">💼 持仓详情</a>
+            <a href="news.html">📰 新闻周报</a>
+            <a href="calendar.html" class="active">📅 催化剂</a>
+            <a href="../notebook.html">📓 笔记本</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="status-banner">
+            <div class="status-item">📅 最后更新：<strong>2026-10-15（仪表盘初始化）</strong></div>
+            <div class="status-item">⏰ 预计下次更新：<strong>2026-10-15 16:05</strong>（今日收盘）</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📅 未来30天催化剂日历</div>
+            <table>
+                <thead><tr><th>日期</th><th>事件</th><th>影响标的</th><th>重要性</th><th>预期影响</th></tr></thead>
+                <tbody>
+                    <tr><td class="mono">10-15 周四</td><td>美国9月PPI数据</td><td class="orange">全市场</td><td><span class="badge badge-medium">中</span></td><td>通胀压力指标</td></tr>
+                    <tr><td class="mono">10-15 周四</td><td>中国9月社融/M2数据（预计）</td><td class="orange">A股/港股</td><td><span class="badge badge-high">高</span></td><td>信用扩张观察</td></tr>
+                    <tr><td class="mono">10-16 周五</td><td>美国9月零售销售</td><td class="orange">美股/消费股</td><td><span class="badge badge-medium">中</span></td><td>消费韧性观察</td></tr>
+                    <tr><td class="mono">10-20 周二</td><td>中国LPR报价（预计不变3.0%）</td><td class="green">A股/港股</td><td><span class="badge badge-low">低</span></td><td>连续持稳概率大</td></tr>
+                    <tr><td class="mono">10-22 周四</td><td>美国首次申领失业金人数</td><td class="orange">美股</td><td><span class="badge badge-medium">中</span></td><td>就业市场观察</td></tr>
+                    <tr><td class="mono">10-28 周三</td><td>美联储FOMC利率决议</td><td class="red">黄金/美债/全球</td><td><span class="badge badge-high">高</span></td><td>预期维持3.75-4.00%，关注措辞</td></tr>
+                    <tr><td class="mono">10-29 周四</td><td>美国Q3 GDP初值</td><td class="orange">美股/美元</td><td><span class="badge badge-high">高</span></td><td>增长数据影响滞胀判断</td></tr>
+                    <tr><td class="mono">10-30 周五</td><td>美国9月核心PCE（美联储首选通胀）</td><td class="red">黄金/美债</td><td><span class="badge badge-high">高</span></td><td>高于2%目标则压制降息预期</td></tr>
+                    <tr><td class="mono">10-31 周六</td><td>中国10月PMI（预计10/31或11/1）</td><td class="orange">A股/商品</td><td><span class="badge badge-medium">中</span></td><td>制造业景气度观察</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📊 持仓股近期事件</div>
+            <table>
+                <thead><tr><th>标的</th><th>近期事件</th><th>日期</th><th>影响</th></tr></thead>
+                <tbody>
+                    <tr><td class="yellow">小米集团</td><td>10月汽车交付数据（每月初）；Q3业绩（预计11月）</td><td class="mono">11月初/11月</td><td class="orange">交付与毛利率决定估值修复</td></tr>
+                    <tr><td class="yellow">阿里巴巴-W</td><td>9月季度业绩（云收入+AI资本开支）；云栖大会</td><td class="mono">11月</td><td class="orange">云增速与回购力度</td></tr>
+                    <tr><td class="yellow">紫金矿业</td><td>三季报（矿产金铜产量）；金价/铜价走势</td><td class="mono">10月底</td><td class="orange">实际利率与金铜价</td></tr>
+                    <tr><td>百通能源</td><td>三季报；鹤壁鼎炬并购进展；热电联产项目达产</td><td class="mono">10月底</td><td class="red">小盘高波动，关注煤价</td></tr>
+                    <tr><td>证券保险ETF</td><td>券商/保险三季报；两市成交额；非银政策</td><td class="mono">10月底</td><td class="orange">行情放大器，跟成交额</td></tr>
+                    <tr><td>创新药ETF</td><td>医保谈判（通常11月）；创新药出海授权交易；三季报</td><td class="mono">11月</td><td class="orange">政策与出海催化</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <div class="card-title">⚠️ 风险提示</div>
+            <div class="highlight-block red">
+                <strong>当前核心风险：</strong><br>
+                1. 美国10Y国债收益率5.30%（20年新高），实际利率2.91%持续攀升，压制黄金和成长股估值<br>
+                2. 布伦特原油突破$100，通胀压力回升，美联储降息空间受限<br>
+                3. 组合现金几乎为0、全权益无缓冲，港股（小米+阿里）深套且占34%，波动风险大<br>
+                4. 百通能源为小盘股（10-14单日-6.02%），流动性与波动风险需警惕<br>
+                5. 10/28美联储FOMC+10/30核心PCE，月底宏观数据密集
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百通能源 - ThePit 每日数据</title>
+    <script src="../vendor/echarts.min.js"></script>
+    <script src="../data/kline_001376.SZ.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a1a; color: #eaeaea; line-height: 1.7; font-size: 17px; }
+        .mono { font-family: 'SF Mono', 'Roboto Mono', Menlo, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .nav { background: #232323; border-bottom: 1px solid #2c2c2c; padding: 20px 36px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .nav-brand { font-size: 24px; font-weight: 700; color: #fbbf24; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a { color: #9a9a9a; text-decoration: none; font-size: 17px; padding: 10px 18px; border-radius: 8px; transition: color 0.2s, background 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: #fbbf24; background: #2c2c2c; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 36px; }
+        .status-banner { background: #232323; border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px 28px; margin-bottom: 28px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .status-item { font-size: 15px; color: #9a9a9a; }
+        .status-item strong { color: #eaeaea; }
+        .card { background: #232323; border: 1px solid #2c2c2c; border-radius: 16px; padding: 32px; margin-bottom: 28px; }
+        .card-title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
+        .green { color: #34d399; }
+        .red { color: #f87171; }
+        .yellow { color: #fbbf24; }
+        .chart-container { height: 400px; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 16px; }
+        th { text-align: left; padding: 14px 16px; color: #9a9a9a; font-weight: 500; border-bottom: 2px solid #2c2c2c; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 16px 18px; border-bottom: 1px solid #2c2c2c; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #2c2c2c; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        @media (max-width: 1200px) { .two-col { grid-template-columns: 1fr; } }
+        .highlight-block { background: rgba(251,191,36,0.08); border-left: 4px solid #fbbf24; padding: 18px 22px; border-radius: 0 10px 10px 0; margin: 16px 0; font-size: 16px; line-height: 1.8; }
+        .highlight-block.red { background: rgba(248,113,113,0.08); border-left-color: #f87171; }
+        .highlight-block.green { background: rgba(52,211,153,0.08); border-left-color: #34d399; }
+    </style>
+    <link rel="stylesheet" href="../responsive.css?v=4">
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-brand">🎛️ ThePit Investment Dashboard</div>
+        <div class="nav-links">
+            <a href="../Homepage.html">📊 每日数据</a>
+            <a href="holdings.html">💼 持仓详情</a>
+            <a href="news.html">📰 新闻周报</a>
+            <a href="calendar.html">📅 催化剂</a>
+            <a href="../notebook.html">📓 笔记本</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="status-banner">
+            <div class="status-item">📅 最后更新：<strong>2026-10-14 收盘（初始化）</strong></div>
+            <div class="status-item">⏰ 预计下次更新：<strong>2026-10-15 16:05</strong>（收盘）</div>
+            <div class="status-item">📊 A股收盘价</div>
+        </div>
+
+        <div class="card">
+            <div style="display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:4px;">
+                <div class="card-title" style="margin-bottom:0;">百通能源 (001376.SZ)</div>
+                <div class="mono" style="font-size:36px;font-weight:700;color:#fbbf24;">¥11.55</div>
+                <div class="red mono" style="font-size:18px;">-¥0.74 (-6.02%) 收盘</div>
+            </div>
+            <div id="klineChart" class="chart-container" style="margin-top:8px;"></div>
+        </div>
+
+        <div class="two-col">
+            <div class="card">
+                <div class="card-title">💰 持仓数据</div>
+                <table>
+                    <tbody>
+                        <tr><td>持股数量</td><td class="mono">15,000 股</td></tr>
+                        <tr><td>成本价</td><td class="mono">¥15.021</td></tr>
+                        <tr><td>当前价</td><td class="mono yellow">¥11.55</td></tr>
+                        <tr><td>总市值</td><td class="mono">¥173,250</td></tr>
+                        <tr><td>浮动盈亏</td><td class="red mono">-¥52,065</td></tr>
+                        <tr><td>盈亏比例</td><td class="red mono">-23.1%</td></tr>
+                        <tr><td>当日盈亏</td><td class="red mono">-¥11,100</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <div class="card-title">🏭 公司概况</div>
+                <div style="font-size:16px;line-height:2;">
+                    <p><strong>主营业务：</strong>为工业园区、产业聚集区提供集中供热（蒸汽），并以热电联产装置供电（电力直售国家电网），煤炭为主要燃料</p>
+                    <p><strong>下游客户：</strong>食品、酿酒、化工、纺织、造纸、医药等工业企业</p>
+                    <p><strong>业务布局：</strong>江苏、山东、江西、贵州、湖北等省份（10余家控股子公司）</p>
+                    <p><strong>市值：</strong>约¥54.5亿（2026-10-15 Wind快照）</p>
+                    <p><strong>PE(TTM)：</strong>约27.9x</p>
+                    <p><strong>关键变量：</strong>热电联产项目达产进度、煤价（成本）、并购扩张（如鹤壁鼎炬）、区域供热特许经营权</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📊 投资逻辑与风险</div>
+            <div class="highlight-block green">
+                <strong>✅ 看多逻辑：</strong><br>
+                1. 工业园区集中供热具备区域排他性（特许经营），客户粘性强、现金流稳定<br>
+                2. 热电联产项目陆续达产，电力销售占比提升，带来收入增量<br>
+                3. 持续并购（鹤壁鼎炬等）扩大供热版图，外延增长有空间<br>
+                4. 公用事业属性（供电供热）在防御配置中有一定稳定性
+            </div>
+            <div class="highlight-block red" style="margin-top:16px;">
+                <strong>⚠️ 风险因素：</strong><br>
+                1. 持仓浮亏-23.1%，成本¥15.021，现价¥11.55；当日大跌-6.02%，波动剧烈<br>
+                2. 小市值公司（约¥55亿），流动性有限、股价波动大<br>
+                3. 以煤炭为主要燃料，煤价上行直接挤压供热毛利<br>
+                4. 收入依赖单一园区客户与新建项目进度，扩张不及预期风险
+            </div>
+        </div>
+    </div>
+    <script>
+        var klineData = window.KLINE_001376 || [];
+        var klineChart = echarts.init(document.getElementById('klineChart'));
+        klineChart.setOption({
+            tooltip: { trigger: 'axis', backgroundColor: '#2c2c2c', borderColor: '#3a3a3a', textStyle: { color: '#eaeaea' } },
+            grid: { left: 60, right: 30, top: 30, bottom: 50 },
+            xAxis: { type: 'category', data: klineData.map(function(d){return d.date;}), axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }, axisLabel: { color: '#9a9a9a', fontSize: 11, rotate: 45 } },
+            yAxis: { type: 'value', scale: true, axisLine: { lineStyle: { color: 'rgba(255,255,255,0.15)' } }, axisLabel: { color: '#9a9a9a', fontSize: 12 }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } } },
+            dataZoom: [{ type: 'inside' }, { type: 'slider', height: 20, bottom: 10, textStyle: { color: '#9a9a9a' } }],
+            series: [{
+                type: 'candlestick',
+                data: klineData.map(function(d){return [d.open, d.close, d.low, d.high];}),
+                itemStyle: { color: '#34d399', color0: '#f87171', borderColor: '#34d399', borderColor0: '#f87171' }
+            }]
+        });
+        window.addEventListener('resize', function() { klineChart.resize(); });
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻周报 - ThePit 每日数据</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a1a; color: #eaeaea; line-height: 1.7; font-size: 17px; }
+        .mono { font-family: 'SF Mono', 'Roboto Mono', Menlo, monospace; font-variant-numeric: tabular-nums; }
+        .nav { background: #232323; border-bottom: 1px solid #2c2c2c; padding: 20px 36px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .nav-brand { font-size: 24px; font-weight: 700; color: #fbbf24; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a { color: #9a9a9a; text-decoration: none; font-size: 17px; padding: 10px 18px; border-radius: 8px; transition: all 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: #fbbf24; background: #2c2c2c; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 36px; }
+        .status-banner { background: #232323; border: 1px solid #3a3a3a; border-radius: 16px; padding: 24px 28px; margin-bottom: 28px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        .status-item { font-size: 16px; color: #9a9a9a; }
+        .status-item strong { color: #eaeaea; font-size: 17px; }
+        .card { background: #232323; border: 1px solid #2c2c2c; border-radius: 16px; padding: 32px; margin-bottom: 28px; }
+        .card-title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+        @media (max-width: 1200px) { .two-col { grid-template-columns: 1fr; } }
+        table { width: 100%; border-collapse: collapse; font-size: 16px; }
+        th { text-align: left; padding: 14px 16px; color: #9a9a9a; font-weight: 500; border-bottom: 2px solid #2c2c2c; font-size: 15px; }
+        td { padding: 14px 16px; border-bottom: 1px solid #2c2c2c; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #2c2c2c; }
+        .green { color: #34d399; } .red { color: #f87171; } .yellow { color: #fbbf24; } .orange { color: #fb923c; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 14px; font-weight: 600; }
+        .badge-green { background: rgba(52,211,153,.15); color: #34d399; }
+        .badge-red { background: rgba(248,113,113,.15); color: #f87171; }
+        .badge-yellow { background: rgba(251,191,36,.15); color: #fbbf24; }
+        .badge-orange { background: rgba(251,146,60,.15); color: #fb923c; }
+        .highlight-block { background: rgba(251,191,36,.08); border-left: 4px solid #fbbf24; padding: 18px 22px; border-radius: 0 10px 10px 0; margin: 16px 0; font-size: 16px; line-height: 1.8; }
+        .highlight-block.red { background: rgba(248,113,113,.08); border-left-color: #f87171; }
+        .highlight-block.green { background: rgba(52,211,153,.08); border-left-color: #34d399; }
+        .news-item { padding: 18px; background: #2c2c2c; border-radius: 10px; margin-bottom: 14px; }
+        .news-item-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 12px; }
+        .news-item-title { font-weight: 600; font-size: 18px; }
+        .news-item-body { font-size: 16px; color: #9a9a9a; line-height: 1.8; margin-bottom: 12px; }
+        .causal-chain { background: #262626; border-radius: 8px; padding: 14px 16px; font-size: 15px; line-height: 1.7; }
+        .causal-chain-label { font-weight: 600; color: #fbbf24; margin-bottom: 6px; }
+        .chain-step { display: inline-block; margin: 2px 0; }
+        .chain-arrow { color: #7a7a7a; margin: 0 6px; }
+        .stars { color: #fbbf24; letter-spacing: 2px; }
+        .stock-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #2c2c2c; }
+        .stock-icon { font-size: 28px; }
+        .stock-name { font-size: 20px; font-weight: 600; }
+        .stock-price { margin-left: auto; font-size: 18px; font-weight: 600; }
+        .review-table td { font-size: 15px; }
+    </style>
+    <link rel="stylesheet" href="../responsive.css?v=4">
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-brand">🎛️ ThePit Investment Dashboard</div>
+        <div class="nav-links">
+            <a href="../Homepage.html">📊 每日数据</a>
+            <a href="holdings.html">💼 持仓详情</a>
+            <a href="news.html" class="active">📰 新闻周报</a>
+            <a href="calendar.html">📅 催化剂</a>
+            <a href="../notebook.html">📓 笔记本</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="status-banner">
+            <div class="status-item">📅 最后更新：<strong>2026-10-15（仪表盘初始化）</strong></div>
+            <div class="status-item">⏰ 首次周报：<strong>2026-10-16 16:30</strong>（周五收盘后）</div>
+            <div class="status-item">📰 每周五收盘后生成</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📰 新闻周报</div>
+            <div class="highlight-block">
+                <strong>本组合周报将在每周五收盘后自动生成，覆盖：</strong><br>
+                1. 本周概览：小米集团、证券保险ETF、创新药ETF、阿里巴巴、紫金矿业、百通能源<br>
+                2. 本周异动汇总（单日涨跌幅 &gt;3% 的标的与原因）<br>
+                3. 新闻 vs 价格复盘（因果链验证）<br>
+                4. 下周关注与催化剂<br>
+                5. 本周情绪标签与影响程度
+            </div>
+            <div class="highlight-block green" style="margin-top:16px;">
+                <strong>✅ 跟踪标的：</strong>小米集团(01810.HK)、阿里巴巴-W(09988.HK)、紫金矿业(601899.SH)、百通能源(001376.SZ)、证券保险ETF(512070.SH)、创新药ETF(159992.SZ)。
+            </div>
+        </div>
+    </div>
+</body>
+</html>

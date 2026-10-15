@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThePit 每日数据</title>
+    <script src="vendor/echarts.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a1a; color: #eaeaea; line-height: 1.7; font-size: 17px; }
+        .mono { font-family: 'SF Mono', 'Roboto Mono', Menlo, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .nav { background: #232323; border-bottom: 1px solid #2c2c2c; padding: 20px 36px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .nav-brand { font-size: 24px; font-weight: 700; color: #fbbf24; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a { color: #9a9a9a; text-decoration: none; font-size: 17px; padding: 10px 18px; border-radius: 8px; transition: color 0.2s, background 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: #fbbf24; background: #2c2c2c; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 36px; }
+        .status-banner { background: #232323; border: 1px solid #3a3a3a; border-radius: 16px; padding: 24px 28px; margin-bottom: 28px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        .status-left { display: flex; flex-direction: column; gap: 6px; }
+        .status-item { font-size: 16px; color: #9a9a9a; }
+        .status-item strong { color: #eaeaea; font-size: 17px; }
+        .update-buttons { display: flex; gap: 14px; }
+        .btn { padding: 12px 24px; border-radius: 10px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-primary { background: #fbbf24; color: #1a1a1a; }
+        .btn-primary:hover { background: #f59e0b; transform: translateY(-1px); }
+        .btn-secondary { background: #2c2c2c; color: #eaeaea; border: 1px solid #3a3a3a; }
+        .btn-secondary:hover { background: #3a3a3a; transform: translateY(-1px); }
+        .card { background: #232323; border: 1px solid #2c2c2c; border-radius: 16px; padding: 32px; margin-bottom: 28px; }
+        .card-title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
+        .hero-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 36px; }
+        .hero-card { background: #232323; border: 1px solid #3a3a3a; border-radius: 16px; padding: 32px; text-align: center; }
+        .hero-label { font-size: 15px; color: #9a9a9a; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .hero-value { font-size: 40px; font-weight: 700; color: #fbbf24; }
+        .hero-value.green { color: #34d399; }
+        .hero-value.red { color: #f87171; }
+        .hero-sub { font-size: 15px; color: #7a7a7a; margin-top: 8px; }
+        table { width: 100%; border-collapse: collapse; font-size: 16px; }
+        .fixed-table { table-layout: fixed; }
+        .fixed-table td, .fixed-table th { overflow: hidden; text-overflow: ellipsis; }
+        .clickable-indicator { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
+        .clickable-indicator:hover { color: #fbbf24; }
+        .group-header td { background: rgba(255,255,255,0.05); font-weight: 700; font-size: 13px; color: #aaa; padding: 6px 12px !important; letter-spacing: 1px; }
+        th { text-align: left; padding: 14px 16px; color: #9a9a9a; font-weight: 500; border-bottom: 2px solid #2c2c2c; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+        td { padding: 16px 18px; border-bottom: 1px solid #2c2c2c; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #2c2c2c; }
+        .green { color: #34d399; }
+        .red { color: #f87171; }
+        .yellow { color: #fbbf24; }
+        .orange { color: #fb923c; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 14px; font-weight: 600; }
+        .badge-green { background: rgba(52,211,153,0.15); color: #34d399; }
+        .badge-red { background: rgba(248,113,113,0.15); color: #f87171; }
+        .badge-yellow { background: rgba(251,191,36,0.15); color: #fbbf24; }
+        .badge-orange { background: rgba(251,146,60,0.15); color: #fb923c; }
+        .chart-container { height: 380px; margin: 20px 0; }
+        .chart-row { display: grid; grid-template-columns: 1fr; gap: 40px; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        @media (max-width: 1200px) { .two-col { grid-template-columns: 1fr; } }
+        .highlight-block { background: rgba(251,191,36,0.08); border-left: 4px solid #fbbf24; padding: 18px 22px; border-radius: 0 10px 10px 0; margin: 16px 0; font-size: 16px; line-height: 1.8; }
+        .highlight-block.red { background: rgba(248,113,113,0.08); border-left-color: #f87171; }
+        .highlight-block.green { background: rgba(52,211,153,0.08); border-left-color: #34d399; }
+        .force-item { padding: 12px 0; border-bottom: 1px solid #2c2c2c; font-size: 16px; }
+        .force-item:last-child { border-bottom: none; }
+        .section-subtitle { font-size: 17px; color: #9a9a9a; margin: 20px 0 16px; font-weight: 500; }
+        .tooltip-cell { overflow: visible !important; }
+        .tooltip { position: relative; display: inline-block; cursor: help; text-decoration: underline dotted; text-underline-offset: 3px; }
+        .tooltip .tooltip-text { visibility: hidden; opacity: 0; transition: opacity 0.2s; position: absolute; top: 110%; left: 0; background: #2c2c2c; color: #eaeaea; padding: 14px 18px; border-radius: 10px; font-size: 13px; line-height: 1.8; width: 310px; z-index: 300; border: 1px solid #444; box-shadow: 0 6px 20px rgba(0,0,0,0.6); text-align: left; font-weight: normal; white-space: normal; }
+        .tooltip .tt-icon { color: #888; font-size: 14px; margin-left: 5px; cursor: help; display: inline-block; width: 18px; height: 18px; line-height: 18px; text-align: center; border-radius: 50%; transition: background 0.2s, color 0.2s; }
+        .tooltip .tt-icon:hover { background: rgba(251,191,36,0.2); color: #fbbf24; }
+        .tooltip .tt-icon:hover + .tooltip-text, .tooltip .tooltip-text:hover { visibility: visible; opacity: 1; }
+        .tooltip-text .tt-title { font-weight: 700; color: #fbbf24; margin-bottom: 6px; font-size: 14px; }
+        .tooltip-text .tt-row { display: flex; justify-content: space-between; }
+        .tooltip-text .tt-hot { color: #f87171; }
+        .tooltip-text .tt-normal { color: #34d399; }
+        .tooltip-text .tt-cold { color: #fb923c; }
+        .tooltip-text .tt-now { margin-top: 8px; padding-top: 8px; border-top: 1px solid #444; color: #eaeaea; }
+    </style>
+    <link rel="stylesheet" href="responsive.css?v=4">
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-brand">🎛️ ThePit Investment Dashboard</div>
+        <div class="nav-links">
+            <a href="Homepage.html" class="active">📊 每日数据</a>
+            <a href="pages/holdings.html">💼 持仓详情</a>
+            <a href="pages/news.html">📰 新闻周报</a>
+            <a href="pages/calendar.html">📅 催化剂</a>
+            <a href="notebook.html">📓 笔记本</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="status-banner">
+            <div class="status-left">
+                <div class="status-item">📅 最后更新：<strong>2026-10-15（初始化，数据截至10-14收盘）</strong></div>
+                <div class="status-item">⏰ 预计下次更新：<strong>2026-10-15 16:05</strong>（今日收盘）</div>
+                <div class="status-item">📊 上次周更新：<strong>待首次周报（10-16周五）</strong></div>
+            </div>
+            <div class="update-buttons">
+                <button class="btn btn-primary" onclick="copyToClipboard('更新本日数据')">⚡ 更新本日数据</button>
+                <button class="btn btn-secondary" onclick="copyToClipboard('更新本周数据')">📊 更新本周数据</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">💼 持仓概览</div>
+            <div class="two-col" style="grid-template-columns:1.25fr 1fr;">
+                <div>
+                    <table class="fixed-table" id="holdingsTable">
+                        <colgroup><col style="width:20%"><col style="width:18%"><col style="width:17%"><col style="width:19%"><col style="width:26%"></colgroup>
+                        <thead><tr><th>标的</th><th>持股</th><th>成本</th><th>当日盈亏%</th><th>当日盈亏金额</th></tr></thead>
+                        <tbody>
+                            <tr><td><a class="clickable-indicator" href="pages/xiaomi.html"><strong>小米集团</strong></a></td><td class="mono">17,000</td><td class="mono">HK$49.29</td><td class="green mono">+1.76%</td><td class="green mono">+¥6,433</td></tr>
+                            <tr><td><a class="clickable-indicator" href="pages/etf512070.html">证券保险ETF</a></td><td class="mono">500,000</td><td class="mono">0.796</td><td class="red mono">-0.66%</td><td class="red mono">-¥2,500</td></tr>
+                            <tr><td><a class="clickable-indicator" href="pages/etf159992.html">创新药ETF</a></td><td class="mono">460,000</td><td class="mono">0.852</td><td class="red mono">-1.22%</td><td class="red mono">-¥4,600</td></tr>
+                            <tr><td><a class="clickable-indicator" href="pages/alibaba.html">阿里巴巴-W</a></td><td class="mono">2,400</td><td class="mono">HK$171.266</td><td class="green mono">+3.08%</td><td class="green mono">+¥6,811</td></tr>
+                            <tr><td><a class="clickable-indicator" href="pages/zijin.html">紫金矿业</a></td><td class="mono">7,900</td><td class="mono">¥34.74</td><td class="red mono">-1.38%</td><td class="red mono">-¥3,318</td></tr>
+                            <tr><td><a class="clickable-indicator" href="pages/baitong.html">百通能源</a></td><td class="mono">15,000</td><td class="mono">¥15.021</td><td class="red mono">-6.02%</td><td class="red mono">-¥11,100</td></tr>
+                            <tr><td>💵 现金</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td><td class="mono">—</td></tr>
+                            <tr style="border-top:2px solid #444;"><td><strong>盈亏总额</strong></td><td class="mono">¥176万</td><td class="mono">¥237万</td><td class="red mono"><strong>-0.47%</strong></td><td class="red mono"><strong>-¥8,274</strong></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <div id="allocPie" class="chart-container"></div>
+                    <div id="pnlAnnotation" style="font-size:12.5px;color:#9a9a9a;margin-top:8px;line-height:1.6;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">📈 核心指标快照</div>
+            <div class="chart-row">
+                <div>
+                    <h4 class="section-subtitle">📈 资产价格</h4>
+                    <table class="fixed-table">
+                        <colgroup><col style="width:26%"><col style="width:29%"><col style="width:16%"><col style="width:15%"><col style="width:14%"></colgroup>
+                        <thead><tr><th>指标</th><th>当前值</th><th>上周</th><th>上月</th><th>当日涨幅</th></tr></thead>
+                        <tbody>
+                            <tr><td>🇨🇳 上证指数</td><td class="mono"><strong>3767.23</strong></td><td class="mono">3830.45</td><td class="mono">~3986</td><td class="red mono">-0.88%</td></tr>
+                            <tr><td>🇨🇳 中证 500</td><td class="mono"><strong>6980.11</strong></td><td class="mono">7435.16</td><td class="mono">~7600</td><td class="red mono">-1.48%</td></tr>
+                            <tr><td>🇭🇰 恒生指数</td><td class="mono"><strong>24314.17</strong></td><td class="mono">23972.29</td><td class="mono">~25460</td><td class="red mono">-0.13%</td></tr>
+                            <tr><td>🇭🇰 恒生科技</td><td class="mono"><strong>4174.47</strong></td><td class="mono">4157.94</td><td class="mono">~4400</td><td class="green mono">+0.91%</td></tr>
+                            <tr><td>🇺🇸 S&P 500</td><td class="mono"><strong>7807.24</strong></td><td class="mono">7670.84</td><td class="mono">7686.14</td><td class="red mono">-0.06%</td></tr>
+                            <tr><td>🇺🇸 纳斯达克</td><td class="mono"><strong>27245.90</strong></td><td class="mono">26797.54</td><td class="mono">26370.89</td><td class="red mono">-0.44%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h4 class="section-subtitle">💰 利率与货币</h4>
+                    <table class="fixed-table">
+                        <colgroup><col style="width:26%"><col style="width:29%"><col style="width:16%"><col style="width:15%"><col style="width:14%"></colgroup>
+                        <thead><tr><th>指标</th><th>当前值</th><th>上周</th><th>上月</th><th>趋势</th></tr></thead>
+                        <tbody>
+                            <tr class="group-header"><td colspan="5">🇺🇸 美国</td></tr>
+                            <tr><td class="clickable-indicator" onclick="toggleMacroChart('us10y', this)">美国 10 年国债</td><td class="mono yellow"><strong>5.30%</strong></td><td class="mono">5.16%</td><td class="mono">4.68%</td><td class="red mono">↑ 20年新高</td></tr>
+                            <tr><td class="clickable-indicator" onclick="toggleMacroChart('fedfunds', this)">联邦基金利率</td><td class="mono orange"><strong>3.75%–4.00%</strong></td><td class="mono">同上</td><td class="mono">同上</td><td class="mono">→ 维持</td></tr>
+                            <tr><td class="clickable-indicator" onclick="toggleMacroChart('cpi', this)">美国 CPI (8月)</td><td class="mono">3.4%</td><td class="mono">—</td><td class="mono">3.4%</td><td class="red mono">粘性</td></tr>
+                            <tr><td class="clickable-indicator tooltip-cell" onclick="toggleMacroChart('pce', this)"><span class="tooltip">美国核心 PCE<span class="tt-icon">ⓘ</span><span class="tooltip-text"><div class="tt-title">核心PCE = 个人消费支出价格指数（剔除食品能源）</div><div class="tt-row"><span>美联储2%通胀目标锚定的是PCE，不是CPI</span></div><div class="tt-row"><span>与CPI区别：PCE覆盖更全（含医保），权重随消费变化</span></div><div class="tt-row"><span class="tt-hot">>3%</span><span>通胀压力大，降息受限</span></div><div class="tt-row"><span class="tt-normal">1.5%–2%</span><span>健康（美联储目标）</span></div><div class="tt-row"><span class="tt-cold"><1.5%</span><span>通胀偏低，需刺激</span></div><div class="tt-now">当前3.0%：高于2%目标，通胀粘性强，美联储难降息</div></span></span></td><td class="mono yellow">3.0%</td><td class="mono">—</td><td class="mono">3.0%</td><td class="red mono">高于目标</td></tr>
+                            <tr class="group-header"><td colspan="5">🇨🇳 中国</td></tr>
+                            <tr><td class="clickable-indicator" onclick="toggleMacroChart('cn10y', this)">中国 10 年国债</td><td class="mono"><strong>1.68%</strong></td><td class="mono">1.67%</td><td class="mono">~1.75%</td><td class="mono">↓ 历史低位</td></tr>
+                            <tr><td class="clickable-indicator" onclick="toggleMacroChart('cnlpr', this)">中国 LPR (1Y)</td><td class="mono">3.0%</td><td class="mono">同上</td><td class="mono">同上</td><td class="mono">→ 不变</td></tr>
+                            <tr><td class="clickable-indicator tooltip-cell" onclick="toggleMacroChart('cnsocialfin', this)"><span class="tooltip">中国社融存量同比<span class="tt-icon">ⓘ</span><span class="tooltip-text"><div class="tt-title">社融存量同比 = 全社会总债务增速</div><div class="tt-row"><span>贷款+发债+信托等全部融资</span></div><div class="tt-row"><span class="tt-hot">>15%</span><span>大水漫灌，债务风险</span></div><div class="tt-row"><span class="tt-normal">10%–13%</span><span>健康，匹配经济增长</span></div><div class="tt-row"><span>8%–10%</span><span>偏紧，经济承压</span></div><div class="tt-row"><span class="tt-cold"><8%</span><span>信用收缩信号</span></div><div class="tt-now">当前7.2%：低于警戒线，信用偏冷，市场预期央行宽松</div></span></span></td><td class="mono"><strong>7.2%</strong></td><td class="mono">—</td><td class="mono">7.4%</td><td class="green mono">↓ 放缓</td></tr>
+                            <tr><td class="clickable-indicator tooltip-cell" onclick="toggleMacroChart('cnm1', this)"><span class="tooltip">中国 M1 同比<span class="tt-icon">ⓘ</span><span class="tooltip-text"><div class="tt-title">M1 = 活期存款+现金（随时能花的钱）</div><div class="tt-row"><span>反映企业信心和花钱意愿</span></div><div class="tt-row"><span class="tt-hot">>10%</span><span>经济火热，企业敢花钱</span></div><div class="tt-row"><span class="tt-normal">5%–10%</span><span>正常</span></div><div class="tt-row"><span class="tt-cold"><5%</span><span>企业存定期，不敢投资</span></div><div class="tt-now">当前4.1%：偏低，企业信心不足，资金"躺平"在定期存款</div></span></span></td><td class="mono"><strong>4.1%</strong></td><td class="mono">—</td><td class="mono">4.0%</td><td class="green mono">→ 平稳</td></tr>
+                            <tr><td class="clickable-indicator tooltip-cell" onclick="toggleMacroChart('cnppi', this)"><span class="tooltip">中国 PPI 同比<span class="tt-icon">ⓘ</span><span class="tooltip-text"><div class="tt-title">PPI = 工业生产者出厂价格指数</div><div class="tt-row"><span>工厂卖东西的价格变化（上游成本）</span></div><div class="tt-row"><span>PPI-CPI剪刀差 = 企业利润空间（越大越挤压）</span></div><div class="tt-row"><span class="tt-hot">>5%</span><span>上游过热，成本失控</span></div><div class="tt-row"><span class="tt-normal">0%–2%</span><span>温和，企业健康</span></div><div class="tt-row"><span class="tt-cold"><0%</span><span>通缩，工业品跌价</span></div><div class="tt-now">当前+5.0%：上游成本压力加大（油价+芯片涨价），CPI+0.9%，剪刀差扩大至4.1pp，企业利润继续被挤压</div></span></span></td><td class="mono red"><strong>+5.0%</strong></td><td class="mono">—</td><td class="mono">+3.8%</td><td class="red mono">↑ 通胀</td></tr>
+                            <tr><td class="clickable-indicator" onclick="toggleMacroChart('cncpi', this)">中国 CPI (9月)</td><td class="mono">0.9%</td><td class="mono">—</td><td class="mono">0.8%</td><td class="mono">↑ 温和</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <h4 class="section-subtitle" style="margin-top:28px;">🥇 黄金重点跟踪</h4>
+            <table class="fixed-table">
+                <colgroup><col style="width:26%"><col style="width:29%"><col style="width:16%"><col style="width:15%"><col style="width:14%"></colgroup>
+                <thead><tr><th>指标</th><th>当前值</th><th>上周</th><th>上月</th><th>月变化</th></tr></thead>
+                <tbody>
+                    <tr><td class="clickable-indicator" onclick="toggleMacroChart('gold', this)">🥇 伦敦金现</td><td class="mono yellow"><strong>4156.07 USD/oz</strong></td><td class="mono">4284.13</td><td class="mono">4437.39</td><td class="red mono">-6.3%</td></tr>
+                    <tr><td class="clickable-indicator" onclick="toggleMacroChart('dollarindex', this)">💵 美元指数</td><td class="mono"><strong>102.37</strong></td><td class="mono">100.77</td><td class="mono">99.37</td><td class="green mono">+3.0%</td></tr>
+                    <tr><td class="clickable-indicator" onclick="toggleMacroChart('usdcny', this)">💱 USD/CNY</td><td class="mono"><strong>6.6827</strong></td><td class="mono">—</td><td class="mono">6.7197</td><td class="green mono">↓ 人民币升</td></tr>
+                    <tr><td class="clickable-indicator" onclick="toggleMacroChart('lmecopper', this)">⚡ LME 铜</td><td class="mono orange"><strong>14621.50 USD</strong> ⚠️</td><td class="mono">—</td><td class="mono">14285</td><td class="green mono">+2.4%</td></tr>
+                    <tr><td class="clickable-indicator" onclick="toggleMacroChart('brent', this)">🛢️ 布伦特原油</td><td class="mono orange"><strong>106.29 USD</strong> ⚠️</td><td class="mono">104.38</td><td class="mono">90.67</td><td class="green mono">+17.2%</td></tr>
+                    <tr><td class="clickable-indicator" onclick="toggleMacroChart('lithium', this)">🔋 电池级碳酸锂</td><td class="mono"><strong>12.28 万元/吨</strong></td><td class="mono">—</td><td class="mono">15.85</td><td class="red mono">-22.5%</td></tr>
+                    <tr><td class="clickable-indicator" onclick="toggleMacroChart('tips', this)">📉 美国10年实际利率</td><td class="mono red"><strong>2.91%</strong></td><td class="mono">—</td><td class="mono">2.64%</td><td class="red mono">↑ 攀升</td></tr>
+                    <tr><td class="clickable-indicator" onclick="toggleMacroChart('pbcg', this)">🏛️ 央行购金 (中国9月)</td><td class="mono green">+23.02吨</td><td class="mono">—</td><td class="mono">+20.2吨</td><td class="mono green">✅ 连续23个月增持</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="two-col">
+            <div class="card">
+                <div class="card-title">🇺🇸 美国周期定位</div>
+                <div style="font-size:16px;">
+                    <div class="highlight-block red"><strong>Dalio判断：滞胀加剧期（9月升级）</strong></div>
+                    <div class="force-item"><span>大周期阶段</span><span class="red">长期债务周期后段·财政货币化</span></div>
+                    <div class="force-item"><span>增长意外</span><span class="red">低于预期（PMI走弱）</span></div>
+                    <div class="force-item"><span>通胀意外</span><span class="red">油价破100 + CPI粘性3.4%</span></div>
+                    <div class="force-item"><span>货币可信度</span><span class="red">⚠️ 严重动摇（10Y破5.3%）</span></div>
+                    <div class="force-item"><span>当前象限</span><span class="red">滞胀（通胀↑增长↓）</span></div>
+                    <div class="force-item"><span>政策利率</span><span class="mono">3.75%–4.00%（9月加息）</span></div>
+                    <div class="force-item"><span>10Y国债</span><span class="red mono">5.30%（20年新高，月内+62bp⚠️）</span></div>
+                    <div class="force-item"><span>实际利率(TIPS)</span><span class="red mono">2.91%（月内+51bp，压制黄金）</span></div>
+                    <div class="highlight-block" style="margin-top:12px;background:rgba(248,113,113,0.12);border-left:3px solid #f87171;">
+                        <strong>📉 9月关键变化：</strong>10Y美债从4.68%飙升至5.30%（+62bp），实际利率从2.40%升至2.91%，布油突破100美元。<strong style="color:#f87171;">债券市场正在定价"财政不可持续+通胀顽固"的双重风险</strong>，这是Dalio所说的"长期债务周期后段"的典型特征。黄金因实际利率飙升短期回调6.3%，但央行购金（+23.02吨/月，连续23个月）和去美元化趋势未变。
+                    </div>
+                    <div class="highlight-block" style="margin-top:12px;background:rgba(96,165,250,0.12);border-left:3px solid #60a5fa;">
+                        <strong>💡 利好：</strong>黄金（长期）· 大宗商品（油/铜）· 短债/现金 · 通胀保值债券(TIPS)<br>
+                        <strong style="color:#f87171;">⚠️ 利空：</strong>长债（5.3%还可能更高）· 高估值成长股（实际利率压制）· 消费股（油价挤压购买力）
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">🇨🇳 中国周期定位</div>
+                <div style="font-size:16px;">
+                    <div class="highlight-block yellow"><strong>Dalio判断：成本推动型再通胀（PPI升+CPI弱）</strong></div>
+                    <div class="force-item"><span>大周期阶段</span><span class="orange">债务重组期（地产去杠杆下半场）</span></div>
+                    <div class="force-item"><span>增长意外</span><span class="yellow">弱复苏（社融放缓至7.2%）</span></div>
+                    <div class="force-item"><span>通胀意外</span><span class="orange">PPI+5.0%↑ 但CPI仅0.9%</span></span></div>
+                    <div class="force-item"><span>货币可信度</span><span class="green">稳定（连续购金23个月+）</span></div>
+                    <div class="force-item"><span>当前象限</span><span class="yellow">通缩底部→成本推动再通胀</span></div>
+                    <div class="force-item"><span>政策利率</span><span class="mono">LPR 3.0%（宽松，连续16个月不变）</span></div>
+                    <div class="force-item"><span>10Y国债</span><span class="green mono">1.68%（历史低位，月内-7bp）</span></div>
+                    <div class="force-item"><span>PPI/CPI剪刀差</span><span class="orange mono">+4.1pp（企业利润受压）</span></div>
+                    <div class="highlight-block" style="margin-top:12px;background:rgba(251,191,36,0.12);border-left:3px solid #fbbf24;">
+                        <strong>📉 9月关键变化：</strong>PPI从+3.8%升至+5.0%（国际油价上行+芯片涨价，成本传导加速），CPI从+0.8%升至+0.9%（终端需求仍弱），<strong style="color:#fbbf24;">PPI-CPI剪刀差扩大至4.1pp</strong>——上游涨价但下游无法转嫁，企业利润继续受压。社融存量同比从7.4%降至7.2%，信用扩张乏力。人民币升值至6.7050（出口强+美元走弱预期）。
+                    </div>
+                    <div class="highlight-block" style="margin-top:12px;background:rgba(96,165,250,0.12);border-left:3px solid #60a5fa;">
+                        <strong>💡 利好：</strong>黄金（央行购金+去美元化）· 铜（若需求复苏确认）· 高股息国企（利率低位）· 短债/现金<br>
+                        <strong style="color:#f87171;">⚠️ 利空：</strong>地产链 · 中下游制造业（PPI-CPI剪刀差挤压利润）· 出口依赖型（汇率升值）· 高杠杆民企
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function copyToClipboard(text) { navigator.clipboard.writeText(text).then(function() { alert("✅ 已复制到剪贴板！\n\n指令：" + text + "\n\n请切换到豆包，按 Cmd+V 粘贴并发送。"); }); }
+        var PNL_DATE = '2026-10-14';
+        var allocChart = echarts.init(document.getElementById('allocPie'));
+        // Dynamically read holdings table → bar chart (never stale)
+        (function() {
+            var rows = document.querySelectorAll('#holdingsTable tbody tr');
+            var names = [], vals = [];
+            for (var i = 0; i < 6; i++) {
+                var tds = rows[i].querySelectorAll('td');
+                var name = tds[0].textContent.trim();
+                var txt = tds[4].textContent.trim().replace(/[¥,\s]/g, '');
+                var neg = txt.indexOf('-') === 0;
+                var num = parseInt(txt.replace(/[+\-]/g, ''), 10);
+                if (neg) num = -num;
+                names.push(name);
+                vals.push({ value: num, itemStyle: { color: num >= 0 ? '#34d399' : '#f87171' } });
+            }
+            names.reverse(); vals.reverse();
+            document.getElementById('pnlAnnotation').textContent = '📈 当日盈亏 · 数据 ' + PNL_DATE + ' 收盘（A股15:00/港股16:00）；港股按 ¥0.86/港元折算。';
+            allocChart.setOption({
+            title: { text: '当日盈亏（' + PNL_DATE + ' 收盘）', left: 6, top: 4, textStyle: { color: '#eaeaea', fontSize: 14, fontWeight: 600 } },
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, backgroundColor: '#2c2c2c', borderColor: '#3a3a3a', textStyle: { color: '#eaeaea', fontSize: 13 }, formatter: function (p) { var v = p[0].value; return p[0].name + '：' + (v > 0 ? '+' : '') + '¥' + v.toLocaleString('en-US'); } },
+            grid: { left: 88, right: 70, top: 42, bottom: 26 },
+            xAxis: { type: 'value', axisLabel: { color: '#9a9a9a', fontSize: 12, formatter: function (v) { return (v > 0 ? '+' : '') + '¥' + (v / 1000) + 'k'; } }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } } },
+            yAxis: { type: 'category', data: names, axisLabel: { color: '#9a9a9a', fontSize: 13 }, axisLine: { lineStyle: { color: 'rgba(255,255,255,0.15)' } } },
+            series: [{ type: 'bar', barWidth: 18, label: { show: true, position: 'right', color: '#eaeaea', fontSize: 12, formatter: function (p) { return (p.value > 0 ? '+' : '') + '¥' + p.value.toLocaleString('en-US'); } }, data: vals }]
+        });
+        })();
+        window.addEventListener('resize', function() { allocChart.resize(); });
+        var activeChartRow = null, activeChart = null;
+        function closeMacroChart() { if (activeChart) { activeChart.dispose(); activeChart = null; } if (activeChartRow) { activeChartRow.remove(); activeChartRow = null; } }
+        function toggleMacroChart(key, el) {
+            var d = macroData[key], tr = el.closest('tr');
+            if (activeChartRow && activeChartRow.previousElementSibling === tr) { closeMacroChart(); return; }
+            closeMacroChart();
+            var chartTr = document.createElement('tr');
+            chartTr.className = 'macro-chart-row';
+            chartTr.innerHTML = '<td colspan="5" style="padding:14px 16px;background:#1e1e1e;border-top:1px solid #333;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><strong style="font-size:14px;">' + d.title + '</strong><span style="color:#888;font-size:12px;cursor:pointer;" onclick="closeMacroChart()">✕ 关闭</span></div><div class="inline-macro-chart" style="height:260px;"></div><div style="color:#666;font-size:11px;margin-top:6px;">' + d.source + '</div></td>';
+            tr.parentNode.insertBefore(chartTr, tr.nextSibling);
+            activeChartRow = chartTr;
+            activeChart = echarts.init(chartTr.querySelector('.inline-macro-chart'));
+            activeChart.setOption({
+                tooltip: { trigger: 'axis', backgroundColor: 'rgba(38,38,38,0.95)', borderColor: 'rgba(255,255,255,0.15)', textStyle: { color: '#eaeaea', fontSize: 13 }, formatter: function(params) { var v = params[0].value; return params[0].name + '：' + (v === null ? '暂无数据' : v + d.unit); } },
+                grid: { left: 42, right: 16, top: 20, bottom: 30 },
+                xAxis: { type: 'category', data: d.months, axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }, axisLabel: { color: '#9a9a9a', fontSize: 11 } },
+                yAxis: { type: 'value', scale: true, min: d.yMin !== undefined ? d.yMin : null, max: d.yMax !== undefined ? d.yMax : null, axisLine: { lineStyle: { color: 'rgba(255,255,255,0.15)' } }, axisLabel: { color: '#9a9a9a', fontSize: 11, formatter: '{value}' }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } } },
+                series: [{ type: 'line', smooth: true, symbol: 'circle', symbolSize: 6, lineStyle: { width: 2.5, color: d.color }, itemStyle: { color: d.color, borderColor: '#1e1e1e', borderWidth: 2 }, areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: d.color + '40' }, { offset: 1, color: d.color + '05' }] } }, data: d.values }]
+            }, true);
+        }
+        var macroData = {
+            gold: { title: '伦敦金现 近12个月月末收盘（USD/oz）', source: '数据来源：同花顺AUUSDO月末收盘价，12/12全部真实', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [4002.69, 4223.10, 4318.27, 4895.12, 5278.26, 4669.13, 4621.34, 4538.16, 4007.49, 4041.18, 4437.39, 4157.41], color: '#fbbf24', unit: ' USD/oz' },
+            us10y: { title: '美国10年国债收益率 近12个月月度均值（%）', source: '数据来源：美联储H.15官方月度数据（RIFLGFCY10_N.M），2025-10至2026-09全部真实', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [4.06, 4.09, 4.14, 4.21, 4.13, 4.25, 4.32, 4.48, 4.47, 4.60, 4.68, 4.93], color: '#f87171', unit: '%' },
+            cpi: { title: '美国CPI同比 近12个月（%）', source: '数据来源：BLS/FRED CPIAUCNS真实同比；25-10 FRED数据缺失按趋势插值，26-09尚未发布（10/14发布）', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [2.7, 2.7, 2.7, 2.4, 2.4, 3.3, 3.8, 4.2, 3.5, 3.4, 3.4, null], color: '#fb923c', unit: '%' },
+            pce: { title: '美国核心PCE同比 近12个月（%）', source: '数据来源：BEA/FRED PCEPILFE真实同比+BEA新闻稿；26-07/08为官方发布值3.0%，26-09尚未发布', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [2.8, 2.8, 3.0, 3.1, 3.0, 3.3, 3.3, 3.5, 3.3, 3.0, 3.0, null], color: '#c084fc', unit: '%' },
+            tips: { title: '美国10年实际利率（TIPS）近12个月月度均值（%）', source: '数据来源：美联储H.15官方月度数据(RIFLGFCY10_XII_N.M)', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [1.76, 1.83, 1.90, 1.91, 1.82, 1.91, 1.94, 2.04, 2.18, 2.35, 2.40, 2.64], color: '#60a5fa', unit: '%' },
+            pbcg: { title: '中国央行月度购金量 近12个月（吨）', source: '数据来源：中国人民银行官方储备资产数据（万盎司折算吨，1盎司=31.1035克）', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [0.93, 0.93, 0.93, 1.24, 0.93, 4.97, 8.09, 9.95, 14.93, 19.90, 20.2, 23.02], color: '#fbbf24', unit: '吨' },
+            fedfunds: { title: '美国联邦基金利率（目标区间上限）近12个月（%）', source: '数据来源：美联储FOMC决议；2025-12-11降息至3.5-3.75%，2026-09加息回3.75-4.00%，全部真实', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [4.00, 4.00, 3.75, 3.75, 3.75, 3.75, 3.75, 3.75, 3.75, 3.75, 3.75, 4.00], color: '#60a5fa', unit: '%', yMin: 3.5, yMax: 4.25 },
+            cnsocialfin: { title: '中国社融存量同比 近12个月（%）', source: '数据来源：中国人民银行金融统计数据报告；11/12真实，26-09尚未发布', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [8.5, 8.5, 8.3, 8.2, 8.2, 7.9, 7.8, 7.7, 7.4, 7.4, 7.2, null], color: '#34d399', unit: '%' },
+            cnm1: { title: '中国M1同比 近12个月（%）', source: '数据来源：中国人民银行货币供应量统计；11/12真实，26-09尚未发布', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [6.2, 4.9, 3.8, 4.9, 5.9, 5.1, 5.0, 5.5, 4.0, 4.0, 4.1, null], color: '#fb923c', unit: '%' },
+            cnppi: { title: '中国PPI同比 近12个月（%）', source: '数据来源：国家统计局工业生产者出厂价格指数；26-09真实数据（10/14发布）', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [-2.1, -2.2, -1.9, -1.4, -0.9, 0.5, 2.8, 3.9, 4.1, 3.5, 3.8, 5.0], color: '#f87171', unit: '%' },
+            lmecopper: { title: 'LME铜 近12个月（USD/吨）', source: '数据来源：25-10至26-02为Insee LME现货月度均价(USD/吨)，26-03为LME官方收盘12224，26-04至26-09为同花顺03CAD月末收盘；12/12全部真实', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [10695.6, 10800.0, 11802.8, 13088.1, 12967.1, 12224, 13019, 13611.5, 13380, 13803, 14285, 14405], color: '#d97706', unit: ' USD/吨' },
+            brent: { title: '布伦特原油 近12个月月末收盘（USD/桶）', source: '数据来源：25-10/12/26-01为新闻报道月末期货收盘价，25-11/26-02/03为EIA现货月均价，26-04至26-09为同花顺BRN0Y连续合约月末收盘；12/12全部真实', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [65.07, 63.80, 61.92, 70.69, 70.89, 103.13, 114.09, 91.99, 72.92, 90.09, 90.67, 103.50], color: '#dc2626', unit: ' USD/桶' },
+            lithium: { title: '电池级碳酸锂 近12个月月底（万元/吨）', source: '数据来源：SMM/上海有色网月底均价+生意社/钢联/长江有色交叉验证；12/12全部真实', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [8.0, 9.33, 11.85, 16.05, 17.35, 16.75, 17.7, 17.75, 15.1, 14.6, 15.85, 12.28], color: '#22d3ee', unit: ' 万元/吨' },
+            cn10y: { title: '中国10年国债收益率（月末）近12个月（%）', source: '数据来源：央行金融市场运行情况+中债登月末值；12/12全部真实', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [1.80, 1.84, 1.68, 1.81, 1.78, 1.82, 1.75, 1.71, 1.73, 1.71, 1.69, 1.68], color: '#06b6d4', unit: '%' },
+            cnlpr: { title: '中国LPR(1Y) 近12个月（%）', source: '数据来源：中国人民银行；2025年5月下调至3.0%后连续16个月不变，全部真实', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0], color: '#14b8a6', unit: '%', yMin: 2.8, yMax: 3.2 },
+            cncpi: { title: '中国CPI同比 近12个月（%）', source: '数据来源：国家统计局；26-08/09真实数据（10/14发布）', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [0.2, 0.7, 0.8, 0.2, 1.3, 1.0, 1.2, 1.2, 1.0, 0.5, 0.8, 0.9], color: '#f59e0b', unit: '%' },
+            dollarindex: { title: '美元指数 近12个月月末收盘', source: '数据来源：同花顺DX0Y连续合约月末收盘价；12/12全部真实', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [99.80, 99.43, 98.00, 97.03, 97.62, 99.70, 98.05, 98.93, 100.94, 99.71, 99.37, 101.21], color: '#6366f1', unit: '' },
+            usdcny: { title: 'USD/CNY 近12个月月末收盘', source: '数据来源：新浪财经美元兑人民币月末汇率收盘价，12/12全部真实', months: ['25-10','25-11','25-12','26-01','26-02','26-03','26-04','26-05','26-06','26-07','26-08','26-09'], values: [7.1200, 7.0740, 6.9879, 6.9566, 6.8630, 6.8881, 6.8310, 6.7663, 6.7880, 6.7589, 6.7197, 6.7050], color: '#8b5cf6', unit: '' }
+        };
+    </script>
+</body>
+</html>

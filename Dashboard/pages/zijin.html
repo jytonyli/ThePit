@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>紫金矿业 - ThePit 每日数据</title>
+    <script src="../vendor/echarts.min.js"></script>
+    <script src="../data/kline_601899.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a1a; color: #eaeaea; line-height: 1.7; font-size: 17px; }
+        .mono { font-family: 'SF Mono', 'Roboto Mono', Menlo, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .nav { background: #232323; border-bottom: 1px solid #2c2c2c; padding: 20px 36px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+        .nav-brand { font-size: 24px; font-weight: 700; color: #fbbf24; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a { color: #9a9a9a; text-decoration: none; font-size: 17px; padding: 10px 18px; border-radius: 8px; transition: color 0.2s, background 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: #fbbf24; background: #2c2c2c; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 36px; }
+        .status-banner { background: #232323; border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px 28px; margin-bottom: 28px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .status-item { font-size: 15px; color: #9a9a9a; }
+        .status-item strong { color: #eaeaea; }
+        .card { background: #232323; border: 1px solid #2c2c2c; border-radius: 16px; padding: 32px; margin-bottom: 28px; }
+        .card-title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
+        .price-hero { text-align: center; padding: 20px 0; }
+        .price-hero .price { font-size: 56px; font-weight: 700; color: #fbbf24; }
+        .price-hero .change { font-size: 24px; margin-top: 8px; }
+        .green { color: #34d399; }
+        .red { color: #f87171; }
+        .yellow { color: #fbbf24; }
+        .chart-container { height: 400px; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; font-size: 16px; }
+        th { text-align: left; padding: 14px 16px; color: #9a9a9a; font-weight: 500; border-bottom: 2px solid #2c2c2c; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 16px 18px; border-bottom: 1px solid #2c2c2c; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #2c2c2c; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        @media (max-width: 1200px) { .two-col { grid-template-columns: 1fr; } }
+        .highlight-block { background: rgba(251,191,36,0.08); border-left: 4px solid #fbbf24; padding: 18px 22px; border-radius: 0 10px 10px 0; margin: 16px 0; font-size: 16px; line-height: 1.8; }
+        .highlight-block.red { background: rgba(248,113,113,0.08); border-left-color: #f87171; }
+        .highlight-block.green { background: rgba(52,211,153,0.08); border-left-color: #34d399; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 14px; font-weight: 600; }
+        .badge-green { background: rgba(52,211,153,0.15); color: #34d399; }
+        .badge-red { background: rgba(248,113,113,0.15); color: #f87171; }
+    </style>
+    <link rel="stylesheet" href="../responsive.css?v=4">
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-brand">🎛️ ThePit Investment Dashboard</div>
+        <div class="nav-links">
+            <a href="../Homepage.html">📊 每日数据</a>
+            <a href="holdings.html">💼 持仓详情</a>
+            <a href="news.html">📰 新闻周报</a>
+            <a href="calendar.html">📅 催化剂</a>
+            <a href="../notebook.html">📓 笔记本</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="status-banner">
+            <div class="status-item">📅 最后更新：<strong>2026-10-14 收盘（初始化）</strong></div>
+            <div class="status-item">⏰ 预计下次更新：<strong>2026-10-15 16:05</strong>（今日收盘）</div>
+            <div class="status-item">📊 A股收盘价</div>
+        </div>
+
+        <div class="card">
+            <div style="display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:4px;">
+                <div class="card-title" style="margin-bottom:0;">紫金矿业 (601899.SH)</div>
+                <div class="mono" style="font-size:36px;font-weight:700;color:#fbbf24;">¥29.98</div>
+                <div class="red mono" style="font-size:18px;">-¥0.42 (-1.38%) 收盘</div>
+            </div>
+            <div id="klineChart" class="chart-container" style="margin-top:8px;"></div>
+        </div>
+
+        <div class="two-col">
+            <div class="card">
+                <div class="card-title">💰 持仓数据</div>
+                <table>
+                    <tbody>
+                        <tr><td>持股数量</td><td class="mono">7,900 股</td></tr>
+                        <tr><td>成本价</td><td class="mono">¥34.74</td></tr>
+                        <tr><td>当前价</td><td class="mono yellow">¥29.98</td></tr>
+                        <tr><td>总市值</td><td class="mono">¥236,842</td></tr>
+                        <tr><td>浮动盈亏</td><td class="red mono">-¥37,604</td></tr>
+                        <tr><td>盈亏比例</td><td class="red mono">-13.7%</td></tr>
+                        <tr><td>当日盈亏</td><td class="red mono">-¥3,318</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <div class="card-title">🏭 公司概况</div>
+                <div style="font-size:16px;line-height:2;">
+                    <p><strong>主营业务：</strong>黄金、铜、锌等有色金属矿产勘探、开采、冶炼</p>
+                    <p><strong>核心资产：</strong>国内最大矿产金生产商、全球前十大铜矿企业</p>
+                    <p><strong>市值：</strong>约¥7,795亿（按总股本260亿股×¥29.98估算）</p>
+                    <p><strong>PE(TTM)：</strong>约18x</p>
+                    <p><strong>股息率：</strong>约2.5%</p>
+                    <p><strong>关键变量：</strong>金价、铜价、产量、并购扩张</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🥇 关联大宗商品</div>
+            <table>
+                <thead><tr><th>品种</th><th>当前价</th><th>月变化</th><th>对紫金影响</th></tr></thead>
+                <tbody>
+                    <tr><td>伦敦金现</td><td class="mono yellow">$4,156.07/oz</td><td class="red mono">-6.3%</td><td><span class="badge badge-red">利空</span> 金价回调</td></tr>
+                    <tr><td>LME铜</td><td class="mono orange">$14,621.50/吨</td><td class="green mono">+2.4%</td><td><span class="badge badge-green">利好</span> 铜价走强</td></tr>
+                    <tr><td>美元指数</td><td class="mono">102.02</td><td class="green mono">+2.7%</td><td><span class="badge badge-red">利空</span> 压制金价</td></tr>
+                    <tr><td>美国10Y实际利率</td><td class="mono red">2.91%</td><td class="red mono">↑攀升</td><td><span class="badge badge-red">利空</span> 黄金最大利空</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📊 投资逻辑与风险</div>
+            <div class="highlight-block green">
+                <strong>✅ 看多逻辑：</strong><br>
+                1. 全球央行持续购金（中国连续23个月增持），去美元化趋势支撑金价长期上行<br>
+                2. 铜供给短缺（新能源需求+矿山品位下降），铜价长期看涨<br>
+                3. 公司产量持续增长，并购扩张能力强（如收购拉果错盐湖锂矿）<br>
+                4. 地缘风险+滞胀环境下，黄金作为避险资产配置价值提升
+            </div>
+            <div class="highlight-block red" style="margin-top:16px;">
+                <strong>⚠️ 风险因素：</strong><br>
+                1. 美国实际利率飙升至2.91%，短期压制金价（黄金最大利空）<br>
+                2. 美元指数走强至102.02，以美元计价的大宗商品承压<br>
+                3. 本组合占比约13%，作为黄金/铜对冲仓位，集中度不高<br>
+                4. 当前浮亏-13.7%，若金价/铜价继续回调可能扩大亏损
+            </div>
+        </div>
+    </div>
+    <script>
+        var klineData = window.KLINE_601899 || [];
+        var klineChart = echarts.init(document.getElementById('klineChart'));
+        klineChart.setOption({
+            tooltip: { trigger: 'axis', backgroundColor: '#2c2c2c', borderColor: '#3a3a3a', textStyle: { color: '#eaeaea' } },
+            grid: { left: 60, right: 30, top: 30, bottom: 50 },
+            xAxis: { type: 'category', data: klineData.map(function(d){return d.date;}), axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }, axisLabel: { color: '#9a9a9a', fontSize: 11, rotate: 45 } },
+            yAxis: { type: 'value', scale: true, axisLine: { lineStyle: { color: 'rgba(255,255,255,0.15)' } }, axisLabel: { color: '#9a9a9a', fontSize: 12 }, splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } } },
+            dataZoom: [{ type: 'inside' }, { type: 'slider', height: 20, bottom: 10, textStyle: { color: '#9a9a9a' } }],
+            series: [{
+                type: 'candlestick',
+                data: klineData.map(function(d){return [d.open, d.close, d.low, d.high];}),
+                itemStyle: { color: '#34d399', color0: '#f87171', borderColor: '#34d399', borderColor0: '#f87171' }
+            }]
+        });
+        window.addEventListener('resize', function() { klineChart.resize(); });
+    </script>
+</body>
+</html>

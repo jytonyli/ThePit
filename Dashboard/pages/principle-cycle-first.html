@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>🌍 周期定位先行 · 经济机器完整版 | ThePit Investment Dashboard</title>
+ <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23fbbf24'/%3E%3Cpath d='M12 44 L26 28 L36 36 L52 14' stroke='%23161616' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+ <script src="../vendor/echarts.min.js"></script>
+ <style>
+ * { margin: 0; padding: 0; box-sizing: border-box; }
+ html { scroll-behavior: smooth; }
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+ color: #eaeaea; line-height: 1.75; font-size: 17px;
+ background-color: #161616;
+ background-image:
+ radial-gradient(1000px 700px at 8% -10%, rgba(251,191,36,0.16), transparent 55%),
+ radial-gradient(900px 700px at 96% 5%, rgba(52,211,153,0.12), transparent 55%);
+ background-attachment: fixed;
+ }
+ .mono { font-family: 'SF Mono', 'Roboto Mono', Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+ .nav {
+ background: rgba(22,22,22,0.45); backdrop-filter: blur(24px) saturate(1.6);
+ -webkit-backdrop-filter: blur(24px) saturate(1.6);
+ border-bottom: 1px solid rgba(255,255,255,0.12);
+ padding: 20px 36px; display: flex; align-items: center; justify-content: space-between;
+ position: sticky; top: 0; z-index: 100;
+ }
+ .nav-brand { font-size: 24px; font-weight: 700; color: #fbbf24; }
+ .nav-links { display: flex; gap: 28px; }
+ .nav-links a { color: #9a9a9a; text-decoration: none; font-size: 17px; padding: 10px 18px; border-radius: 8px; transition: all 0.2s; }
+ .nav-links a:hover, .nav-links a.active { color: #fbbf24; background: rgba(255,255,255,0.08); }
+ .container { max-width: 1300px; margin: 0 auto; padding: 36px; }
+ .status-banner {
+ background: rgba(38,38,38,0.38); backdrop-filter: blur(18px) saturate(1.4);
+ -webkit-backdrop-filter: blur(18px) saturate(1.4);
+ border: 1px solid rgba(255,255,255,0.13); border-radius: 16px;
+ padding: 24px 28px; margin-bottom: 28px; box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+ display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+ }
+ .status-item { font-size: 16px; color: #9a9a9a; }
+ .status-item strong { color: #eaeaea; font-size: 17px; }
+ .card {
+ background: rgba(38,38,38,0.38); backdrop-filter: blur(18px) saturate(1.4);
+ -webkit-backdrop-filter: blur(18px) saturate(1.4);
+ border: 1px solid rgba(255,255,255,0.13); border-radius: 16px;
+ padding: 32px; margin-bottom: 28px; box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+ }
+ .card-title { font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+ .card-sub { font-size: 15px; color: #9a9a9a; margin-bottom: 22px; }
+ .section-subtitle { font-size: 17px; color: #9a9a9a; margin: 22px 0 14px; font-weight: 500; }
+ table { width: 100%; border-collapse: collapse; font-size: 15px; table-layout: fixed; margin: 14px 0; }
+ th { text-align: left; padding: 14px 16px; color: #9a9a9a; font-weight: 500; border-bottom: 2px solid rgba(255,255,255,0.12); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+ td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); vertical-align: top; }
+ tr:last-child td { border-bottom: none; }
+ tr:hover { background: rgba(255,255,255,0.04); }
+ .green { color: #34d399; } .red { color: #f87171; } .yellow { color: #fbbf24; } .orange { color: #fb923c; }
+ .highlight-block {
+ background: rgba(251,191,36,0.08); border-left: 4px solid #fbbf24;
+ padding: 18px 22px; border-radius: 0 10px 10px 0; margin: 16px 0;
+ font-size: 15px; line-height: 1.8;
+ }
+ .highlight-block.red { background: rgba(248,113,113,0.08); border-left-color: #f87171; }
+ .highlight-block.green { background: rgba(52,211,153,0.08); border-left-color: #34d399; }
+ .highlight-block.orange { background: rgba(251,146,60,0.08); border-left-color: #fb923c; }
+ .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin: 14px 0; }
+ .flow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin: 18px 0; }
+ .flow-step {
+ background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+ border-radius: 10px; padding: 12px 10px; text-align: center; font-size: 14px; line-height: 1.5;
+ }
+ .flow-step .step-no { display: block; font-size: 12px; color: #fbbf24; font-weight: 700; margin-bottom: 4px; }
+ .flow-step .step-asset { display: block; margin-top: 6px; font-size: 13px; color: #9a9a9a; }
+ .vflow { display: grid; grid-template-columns: 28px 1fr; gap: 0 14px; margin: 18px 0; }
+ .vflow .dot { justify-self: center; width: 14px; height: 14px; border-radius: 50%; background: #fbbf24; margin-top: 22px; }
+ .vflow .dot.red { background: #f87171; }
+ .vflow .dot.green { background: #34d399; }
+ .vflow .dot.orange { background: #fb923c; }
+ .vflow .node { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+ .vflow .node:last-child { border-bottom: none; }
+ .vflow .node-title { font-weight: 600; font-size: 16px; }
+ .vflow .node-desc { font-size: 14px; color: #9a9a9a; margin-top: 4px; }
+ .checklist { list-style: none; padding: 0; margin: 14px 0; }
+ .checklist li { padding: 10px 0 10px 28px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; position: relative; }
+ .checklist li:last-child { border-bottom: none; }
+ .checklist li::before { content: "\2022"; position: absolute; left: 6px; color: #fbbf24; }
+ .numbered { list-style: none; padding: 0; margin: 14px 0; counter-reset: item; }
+ .numbered li { padding: 8px 0 8px 34px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 15px; position: relative; counter-increment: item; }
+ .numbered li:last-child { border-bottom: none; }
+ .numbered li::before { content: counter(item); position: absolute; left: 0; top: 10px; width: 22px; height: 22px; border-radius: 50%; background: rgba(251,191,36,0.15); color: #fbbf24; font-size: 13px; font-weight: 700; text-align: center; line-height: 22px; }
+ .quote-block { border-left: 3px solid rgba(255,255,255,0.25); padding: 6px 0 6px 20px; margin: 14px 0; color: #c8c8c8; font-style: italic; font-size: 15px; }
+ .chart-container { height: 320px; margin: 16px 0; }
+ .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+ .data-strip {
+ background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+ border-radius: 10px; padding: 12px 18px; margin: 14px 0;
+ font-family: 'SF Mono', 'Roboto Mono', Menlo, Consolas, monospace;
+ font-size: 14px; color: #9a9a9a; line-height: 1.9;
+ }
+ .data-strip .num { color: #fbbf24; font-weight: 700; }
+ .takeaway {
+ background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.35);
+ border-radius: 12px; padding: 18px 22px; margin: 16px 0;
+ font-size: 16px; line-height: 1.8;
+ }
+ .takeaway .label { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1px; color: #161616; background: #fbbf24; border-radius: 6px; padding: 2px 10px; margin-right: 10px; }
+ .so-what {
+ background: rgba(52,211,153,0.08); border-left: 4px solid #34d399;
+ border-radius: 0 12px 12px 0; padding: 18px 22px; margin: 22px 0 6px;
+ font-size: 15px; line-height: 1.8;
+ }
+ .so-what .label { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1px; color: #161616; background: #34d399; border-radius: 6px; padding: 2px 10px; margin-right: 10px; }
+ .chapter-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 4px; }
+ .chapter-no { font-size: 15px; color: #fbbf24; font-weight: 700; }
+ .scroll-top {
+ position: fixed; right: 24px; bottom: 28px; z-index: 90;
+ width: 46px; height: 46px; border-radius: 50%;
+ background: rgba(251,191,36,0.92); color: #161616;
+ border: none; cursor: pointer; font-size: 22px; font-weight: 700; line-height: 1;
+ box-shadow: 0 8px 24px rgba(0,0,0,0.45); opacity: 0; pointer-events: none;
+ transition: all 0.25s;
+ }
+ .chapter-nav { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0 24px; }
+ .chapter-nav a { color: #9a9a9a; text-decoration: none; font-size: 14px; padding: 8px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.05); transition: all 0.2s; }
+ .chapter-nav a:hover { color: #fbbf24; border-color: rgba(251,191,36,0.5); background: rgba(251,191,36,0.08); }
+ .snapshot-badge {
+ display: inline-block; background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.4);
+ color: #fbbf24; border-radius: 999px; padding: 3px 12px; font-size: 13px; font-weight: 600;
+ }
+ .scroll-top.show { opacity: 1; pointer-events: auto; }
+ @media (max-width: 1024px) {
+ body { font-size: 16px; } .container { padding: 20px 16px; }
+ .nav { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
+ .nav-brand { font-size: 19px; } .nav-links { gap: 4px; flex-wrap: wrap; }
+ .nav-links a { font-size: 14px; padding: 7px 10px; }
+ .card { padding: 20px 16px; border-radius: 12px; margin-bottom: 18px; }
+ .card-title { font-size: 18px; }
+ table { font-size: 13px; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+ th { padding: 10px 8px; font-size: 11px; } td { padding: 10px 8px; }
+ .two-col, .chart-row { grid-template-columns: 1fr; }
+ .flow { grid-template-columns: repeat(3, 1fr); }
+ .chart-container { height: 240px; }
+ }
+ @media (max-width: 640px) {
+ body { font-size: 15px; line-height: 1.6; } .container { padding: 14px 10px; }
+ .nav { padding: 10px 12px; flex-direction: column; align-items: flex-start; gap: 6px; }
+ .nav-brand { font-size: 17px; }
+ .nav-links { width: 100%; gap: 2px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+ .nav-links a { font-size: 13px; padding: 6px 8px; white-space: nowrap; }
+ .card { padding: 16px 12px; border-radius: 10px; margin-bottom: 14px; }
+ .card-title { font-size: 16px; }
+ .highlight-block { padding: 12px 14px; font-size: 13px; margin: 10px 0; }
+ .flow { grid-template-columns: repeat(2, 1fr); }
+ .chart-container { height: 200px; }
+ .vflow { grid-template-columns: 22px 1fr; }
+ .scroll-top { width: 38px; height: 38px; right: 12px; bottom: 16px; font-size: 18px; opacity: 0.85; }
+ }
+ @media (max-width: 380px) { .flow { grid-template-columns: 1fr; } }
+ </style>
+</head>
+<body>
+ <nav class="nav">
+ <div class="nav-brand">🎛️ ThePit Investment Dashboard</div>
+ <div class="nav-links">
+ <a href="../Homepage.html">📊 每日数据</a>
+ <a href="holdings.html">💼 持仓详情</a>
+ <a href="news.html">📰 新闻周报</a>
+ <a href="calendar.html">📅 催化剂</a>
+ <a href="../notebook.html">📓 笔记本</a>
+ </div>
+ </nav>
+
+ <div class="container">
+ <div class="status-banner">
+ <div>
+ <div class="status-item" style="font-size:22px;font-weight:700;color:#eaeaea;">🌍 周期定位先行 · 原则详解</div>
+ <div class="status-item" style="margin-top:6px;">四章详情已拆为独立页面：⚙️ 经济机器 · 📈 生产率 · 🔄 短周期 · ⏳ 长周期（顶部胶囊直达）</div>
+ </div>
+ <div>
+ <div class="status-item"><span class="snapshot-badge">⚠ 数据快照：2026-09-29 · 不随行情自动更新</span></div>
+ <div class="status-item" style="margin-top:8px;"><a href="../notebook.html#ch1" style="color:#fbbf24;">← 返回原则清单</a></div>
+ </div>
+ </div>
+
+ <!-- ===== 全景统领 ===== -->
+ <div class="card" id="overview">
+ <div class="card-title">🧭 一图看懂：周期定位</div>
+ <div class="card-sub">先定位周期，再谈买卖。这张图就是经济机器的全部：<strong>实线</strong>是确定性的（生产率斜线 + 叠加结果），<strong>虚线</strong>是周期性波动成分（短周期 5–8 年、长周期 50–75 年）。你看到的一切行情，都是这三条线的合体。</div>
+
+ <div class="chapter-nav">
+ <a href="economy-machine.html">⚙️ 经济机器</a>
+ <a href="productivity.html">📈 生产率</a>
+ <a href="short-term-cycle.html">🔄 短周期</a>
+ <a href="long-term-cycle.html">⏳ 长周期</a>
+ </div>
+
+ <div class="chart-container" id="threeForcesChart" style="height:340px;"></div>
+ <div class="highlight-block red" style="font-size:13px;">图：结构示意（非真实数据）。<strong>实线</strong> = 生产率（长期斜线）与叠加结果；<strong>虚线</strong> = 短周期与长周期的波动成分。<br>📍 当前位置（2026）：<strong class="red">长周期后段</strong> + <strong class="orange">短周期「④紧缩 → ⑤放缓」</strong> + <strong class="yellow">信用偏收缩</strong>。</div>
+
+ <h3 class="section-subtitle">📍 2026 定位速览（先看结论，再往下翻证据）</h3>
+ <table>
+ <colgroup><col style="width:18%"><col style="width:40%"><col style="width:42%"></colgroup>
+ <thead><tr><th>力量</th><th>当前阶段（2026）</th><th>对下注的含义</th></tr></thead>
+ <tbody>
+ <tr><td><strong>📈 生产率</strong></td><td>美国实际增长 ~1.5–2%，AI / 数据中心是新引擎</td><td>长线押生产率（AI / 科技 / 高端制造）；别用短期涨跌判断生产率</td></tr>
+ <tr><td><strong>🔄 短周期</strong></td><td>美国「④紧缩 → ⑤放缓」之间；中国「①底部 → ②复苏」之间</td><td>美国持现金 + 黄金、别追股票；中国等社融拐头再上</td></tr>
+ <tr><td><strong>⏳ 长周期</strong></td><td>美国后段：债务 $40 万亿、实际利率 ~2.4% &gt; 实际增长</td><td>黄金是底仓不是炒作；每次回调是「吃碎玻璃」机会</td></tr>
+ <tr><td><strong>💳 信用</strong></td><td>全球偏收缩：中国宽货币 ≠ 宽信用（社融 7.4%、新增贷款罕见净减）；美国高利率压制</td><td>对股票不宜激进；盯「社融拐头 + 利率见顶」两个信号</td></tr>
+ </tbody>
+ </table>
+ </div>
+
+ <div class="card" id="action">
+ <div class="card-title">🧭 现在怎么下注（2026 · 从速览到动作）</div>
+ <div class="card-sub">速览表告诉你现在处在哪个阶段；这里把每个阶段翻译成「买什么 / 等到什么才动」。</div>
+ <table>
+ <colgroup><col style="width:24%"><col style="width:38%"><col style="width:38%"></colgroup>
+ <thead><tr><th>定位结论</th><th>动作</th><th>触发 / 认错信号</th></tr></thead>
+ <tbody>
+ <tr><td><strong>⏳ 长周期后段</strong></td><td>黄金是底仓，不是炒作；回调是「吃碎玻璃」机会</td><td>认错：强劲财政整顿落地（加税+砍支出），或实际利率持续 &gt;2.5% 超 12 个月且央行购金停滞</td></tr>
+ <tr><td><strong>🔄 美国紧缩后段</strong></td><td>持现金 + 短债，别追股票</td><td>降息落地前权益承压；收益率曲线转陡 = 复苏早期信号</td></tr>
+ <tr><td><strong>💳 中国信用偏收缩</strong></td><td>股票观望，不猜底</td><td>等社融增速拐头 + 新增贷款转正再加</td></tr>
+ <tr><td><strong>🎯 盯两个信号</strong></td><td>信号出现前机械等待</td><td>收益率曲线转陡 + 信贷脉冲回升</td></tr>
+ </tbody>
+ </table>
+ <div class="highlight-block green">决策闭环：下注前先写下决策准则（凭什么这么决定 → 赌哪个变量 → 什么情况认错 → 到点机械执行），模板见 <a href="../../📋 决策准则与复盘.md" style="color:#fbbf24;">📋 决策准则与复盘.md</a>。</div>
+ </div>
+
+ <div class="card" id="history">
+ <div class="card-title">📚 深度研究库（Dalio 样本库 · 7 段历史）</div>
+ <div class="card-sub">每一段都是经济机器某条曲线的极端样本：去杠杆的种类、印钞的极限、衰退的完整回合。按时间顺序排列，点击进入逐段研究页。</div>
+ <table>
+ <colgroup><col style="width:22%"><col style="width:56%"><col style="width:22%"></colgroup>
+ <thead><tr><th>时期</th><th>一句话定性</th><th>研究页</th></tr></thead>
+ <tbody>
+ <tr><td><strong>1923 德国</strong></td><td>魏玛恶性通胀：印钞的极限</td><td><a href="history-weimar.html" style="color:#fbbf24;text-decoration:none;">魏玛 →</a></td></tr>
+ <tr><td><strong>1929–1945 美国</strong></td><td>大萧条 + 二战：通缩去杠杆后印钞战争支出</td><td><a href="history-1929.html" style="color:#fbbf24;text-decoration:none;">1929 →</a></td></tr>
+ <tr><td><strong>1945–1970 美国</strong></td><td>战后黄金年代：生产率高增 + 债务被稀释</td><td><a href="history-1945.html" style="color:#fbbf24;text-decoration:none;">1945 →</a></td></tr>
+ <tr><td><strong>1971–1980 美国</strong></td><td>布雷顿森林解体、美元脱钩黄金、滞胀：黄金 $35 → $850</td><td><a href="history-1971.html" style="color:#fbbf24;text-decoration:none;">1971 →</a></td></tr>
+ <tr><td><strong>1980–1982 美国</strong></td><td>沃尔克衰退：激进加息杀通胀的完整回合</td><td><a href="history-volcker.html" style="color:#fbbf24;text-decoration:none;">沃尔克 →</a></td></tr>
+ <tr><td><strong>1990–至今 日本</strong></td><td>资产负债表衰退：零利率后失去的三十年</td><td><a href="history-1990.html" style="color:#fbbf24;text-decoration:none;">1990 →</a></td></tr>
+ <tr><td><strong>2008 美国/全球</strong></td><td>现代信用收缩：信贷危机引发全球衰退</td><td><a href="history-2008.html" style="color:#fbbf24;text-decoration:none;">2008 →</a></td></tr>
+ </tbody>
+ </table>
+ </div>
+
+ <div class="status-banner" style="justify-content:space-between;">
+ <div class="status-item">← 上一篇：<a href="principle-review.html" style="color:#fbbf24;">复盘迭代</a></div>
+ <div class="status-item">下一篇：<a href="principle-resilience.html" style="color:#fbbf24;">组合韧性 →</a></div>
+ </div>
+ </div>
+
+ <button id="scrollTop" class="scroll-top" title="返回顶部">↑</button>
+<script>
+ // 三股力量叠加（结构示意，非真实数据）
+ var threeChart = echarts.init(document.getElementById('threeForcesChart'));
+ (function () {
+ var xs = [], prod = [], short = [], long = [], sum = [];
+ for (var i = 0; i <= 100; i += 2) {
+ xs.push(i);
+ var p = 1 + 0.018 * i; // 生产率：长期斜线
+ var s = 0.13 * Math.sin(i / 8 * Math.PI * 2); // 短周期：5-8年波动
+ var l = 0.5 * Math.sin(i / 55 * Math.PI * 2); // 长周期：50-75年大波
+ prod.push(+p.toFixed(2));
+ short.push(+(p + s).toFixed(2));
+ long.push(+(p + l).toFixed(2));
+ sum.push(+(p + s + l).toFixed(2));
+ }
+ var toData = function (arr) { return xs.map(function (x, j) { return [x, arr[j]]; }); };
+ threeChart.setOption({
+ tooltip: {
+ trigger: 'axis',
+ backgroundColor: 'rgba(38,38,38,0.95)',
+ borderColor: 'rgba(255,255,255,0.15)',
+ textStyle: { color: '#eaeaea', fontSize: 13 },
+ valueFormatter: function (v) { return v.toFixed(2); }
+ },
+ legend: {
+ top: 0,
+ textStyle: { color: '#9a9a9a', fontSize: 13 },
+ itemWidth: 18, itemHeight: 10,
+ data: ['生产率（长期斜线）', '+ 短周期波动', '+ 长周期大波', '叠加结果']
+ },
+ grid: { left: 50, right: 24, top: 44, bottom: 36 },
+ xAxis: {
+ type: 'value', name: '时间 →', nameTextStyle: { color: '#9a9a9a', fontSize: 12 },
+ axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } },
+ axisLabel: { color: '#9a9a9a', fontSize: 12 },
+ splitLine: { show: false }
+ },
+ yAxis: {
+ type: 'value', name: '经济产出（示意）', nameTextStyle: { color: '#9a9a9a', fontSize: 12 },
+ axisLine: { lineStyle: { color: 'rgba(255,255,255,0.15)' } },
+ axisLabel: { color: '#9a9a9a', fontSize: 12 },
+ splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } }
+ },
+ series: [
+ {
+ name: '生产率（长期斜线）', type: 'line',
+ data: toData(prod), smooth: true, symbol: 'none',
+ lineStyle: { width: 3, color: '#34d399' }
+ },
+ {
+ name: '+ 短周期波动', type: 'line',
+ data: toData(short), smooth: true, symbol: 'none',
+ lineStyle: { width: 2, color: '#60a5fa', type: 'dashed' }
+ },
+ {
+ name: '+ 长周期大波', type: 'line',
+ data: toData(long), smooth: true, symbol: 'none',
+ lineStyle: { width: 2, color: '#f87171', type: 'dashed' }
+ },
+ {
+ name: '叠加结果', type: 'line',
+ data: toData(sum), smooth: true, symbol: 'none',
+ lineStyle: { width: 3.5, color: '#fbbf24' },
+ areaStyle: { color: { type: 'linear', x: 0, y: 0, x2: 0, y2: 1, colorStops: [{ offset: 0, color: 'rgba(251,191,36,0.25)' }, { offset: 1, color: 'rgba(251,191,36,0.02)' }] } }
+ }
+ ]
+ });
+ })();
+
+window.addEventListener('resize', function() { threeChart.resize(); });
+
+ // 返回顶部 + 目录高亮
+ var scrollTopBtn = document.getElementById('scrollTop');
+ var tocLinks = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+ window.addEventListener('scroll', function() {
+ scrollTopBtn.classList.toggle('show', window.scrollY > 600);
+ var pos = window.scrollY + 140;
+ var current = 0;
+ tocLinks.forEach(function(link, i) {
+ var target = document.querySelector(link.getAttribute('href'));
+ if (target && target.offsetTop <= pos) current = i;
+ });
+ tocLinks.forEach(function(link, i) {
+ link.classList.toggle('active', i === current);
+ });
+ }, { passive: true });
+ scrollTopBtn.addEventListener('click', function() {
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+ });
+ </script>
+</body>
+</html>
