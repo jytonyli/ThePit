@@ -60,29 +60,410 @@
             <a href="holdings.html">💼 持仓详情</a>
             <a href="news.html" class="active">📰 新闻周报</a>
             <a href="calendar.html">📅 催化剂</a>
-            <a href="../notebook.html">📓 笔记本</a>
         </div>
     </nav>
     <div class="container">
         <div class="status-banner">
-            <div class="status-item">📅 最后更新：<strong>2026-10-15（仪表盘初始化）</strong></div>
-            <div class="status-item">⏰ 首次周报：<strong>2026-10-16 16:30</strong>（周五收盘后）</div>
-            <div class="status-item">📰 每周五收盘后生成</div>
+            <div class="status-item">📅 最后更新：<strong>2026-10-15 12:45（首期周报·午间）</strong></div>
+            <div class="status-item">⏰ 下次周报：<strong>2026-10-16 16:30</strong>（周五收盘后）</div>
+            <div class="status-item">📅 本周区间：2026年10月12日 - 10月15日（午间）</div>
         </div>
 
         <div class="card">
-            <div class="card-title">📰 新闻周报</div>
-            <div class="highlight-block">
-                <strong>本组合周报将在每周五收盘后自动生成，覆盖：</strong><br>
-                1. 本周概览：小米集团、证券保险ETF、创新药ETF、阿里巴巴、紫金矿业、百通能源<br>
-                2. 本周异动汇总（单日涨跌幅 &gt;3% 的标的与原因）<br>
-                3. 新闻 vs 价格复盘（因果链验证）<br>
-                4. 下周关注与催化剂<br>
-                5. 本周情绪标签与影响程度
+            <div class="card-title">📅 本周概览（10.12 - 10.15）</div>
+            <table>
+                <thead><tr><th>标的</th><th>本周涨跌</th><th>情绪</th><th>影响度</th><th>关键事件</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>📱 小米集团 01810</td>
+                        <td class="green mono">+4.1%</td>
+                        <td><span class="badge badge-green">🟢 正面</span></td>
+                        <td class="yellow">★★★★☆</td>
+                        <td>澎程锁单7万催化延续，10/15大盘科网齐跌中逆势+2.4%，成长属性占优</td>
+                    </tr>
+                    <tr>
+                        <td>🛒 阿里巴巴-W 09988</td>
+                        <td class="red mono">-1.7%</td>
+                        <td><span class="badge badge-yellow">🟡 震荡</span></td>
+                        <td class="yellow">★★★☆☆</td>
+                        <td>10/14南向净买入11.9亿居首+3.1%，10/15随恒科-2.94%回落近5%</td>
+                    </tr>
+                    <tr>
+                        <td>🥇 紫金矿业 601899</td>
+                        <td class="red mono">-4.7%</td>
+                        <td><span class="badge badge-red">🔴 偏空</span></td>
+                        <td class="yellow">★★★★☆</td>
+                        <td>美国9月CPI 3.7%超预期→加息预期回升，金铜承压，10/15黄金板块相对抗跌</td>
+                    </tr>
+                    <tr>
+                        <td>⚡ 百通能源 001376</td>
+                        <td class="red mono">-8.4% ⚠️</td>
+                        <td><span class="badge badge-red">🔴 负面</span></td>
+                        <td class="yellow">★★★★★</td>
+                        <td>拟1.5亿收购鹤壁鼎炬热能，市场不买账，10/14跌6%、10/15再跌3.4%，空头加速</td>
+                    </tr>
+                    <tr>
+                        <td>🏦 证券保险ETF 512070</td>
+                        <td class="red mono">-1.4%</td>
+                        <td><span class="badge badge-yellow">🟡 中性</span></td>
+                        <td class="yellow">★★☆☆☆</td>
+                        <td>跟随大盘小幅回调，10/15证券板块逆势拉升（华林证券+8%），相对抗跌</td>
+                    </tr>
+                    <tr>
+                        <td>💊 创新药ETF 159992</td>
+                        <td class="red mono">-3.9%</td>
+                        <td><span class="badge badge-yellow">🟡 中性偏多</span></td>
+                        <td class="yellow">★★★☆☆</td>
+                        <td>医保局10/13会议支持医药科技创新，10/15创新药概念震荡反弹</td>
+                    </tr>
+                    <tr style="border-top:2px solid #444;">
+                        <td><strong>组合合计（约¥176万）</strong></td>
+                        <td class="red mono"><strong>-2.0%</strong></td>
+                        <td><span class="badge badge-red">🔴 承压回调</span></td>
+                        <td>—</td>
+                        <td>本周账面浮亏约-¥3.6万，百通领跌、资源股回调，小米逆势对冲</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="highlight-block red" style="margin-top:20px;">
+                <strong>本周宏观主线（Dalio视角）：</strong>① <strong style="color:#f87171;">美国9月CPI同比3.7%、核心2.6%，双双反弹超预期</strong>，市场对10月加息概率回弹至33%、12月加息预期超90%，美债10Y高位、金铜有色承压 ② <strong>中国9月社融存量同比7.1%、M1同比3.2%（较8月4.1%大幅回落）</strong>，信用扩张偏弱、企业活跃度下降；CPI +0.9%、PPI +5.0%，剪刀差仍压制中下游利润 ③ <strong>10/15全球风险资产普跌</strong>：上证午盘-1.98%、中证500 -2.98%、恒生科技-2.94%，科网/有色/煤炭/石油齐跌 ④ <strong>避险结构分化</strong>：黄金板块、证券板块、创新药概念在10/15逆势相对抗跌，资金在大盘杀跌中寻找防御与政策催化方向。<br>
+                <em style="color:#fbbf24;">滞胀环境下的典型盘面——高利率压制成长与资源估值，只有"自身有强催化或政策托底"的标的能逆势。本周组合的核心矛盾是：没有一个持仓受益于"加息预期升温"，这正是Dalio框架提示的高利率风险。</em>
             </div>
-            <div class="highlight-block green" style="margin-top:16px;">
-                <strong>✅ 跟踪标的：</strong>小米集团(01810.HK)、阿里巴巴-W(09988.HK)、紫金矿业(601899.SH)、百通能源(001376.SZ)、证券保险ETF(512070.SH)、创新药ETF(159992.SZ)。
+        </div>
+
+        <div class="card">
+            <div class="card-title">📊 本周异动汇总</div>
+            <table>
+                <thead><tr><th>日期</th><th>标的</th><th>异动</th><th>情绪</th><th>原因</th></tr></thead>
+                <tbody>
+                    <tr><td class="mono">10/14 周三</td><td>百通能源</td><td class="red mono">-6.02% ⚠️</td><td><span class="badge badge-red">🔴 负面</span></td><td>公告拟1.5亿收购鹤壁鼎炬热能100%股权，市场担忧溢价/摊薄，成交1.78亿，主力净流出</td></tr>
+                    <tr><td class="mono">10/14 周三</td><td>阿里巴巴-W</td><td class="green mono">+3.08%</td><td><span class="badge badge-green">🟢 正面</span></td><td>南向资金净买入11.9亿港元居首，科网龙头资金回流</td></tr>
+                    <tr><td class="mono">10/15 周四</td><td>百通能源</td><td class="red mono">-3.38% ⚠️</td><td><span class="badge badge-red">🔴 负面</span></td><td>收购利空发酵+小盘电力股情绪低迷，空头加速下跌，盘中最低11.10</td></tr>
+                    <tr><td class="mono">10/15 周四</td><td>恒生科技/科网</td><td class="red mono">-2.94%（阿里-4.8%）</td><td><span class="badge badge-red">🔴 负面</span></td><td>美国CPI超预期+外围大跌，大型科网股全线走弱，阿里、百度跌近5%</td></tr>
+                    <tr><td class="mono">10/15 周四</td><td>小米集团</td><td class="green mono">+2.43%（逆势）</td><td><span class="badge badge-green">🟢 正面</span></td><td>科网齐跌中唯一逆势上涨权重，汽车交付逻辑+资金避险偏好</td></tr>
+                    <tr><td class="mono">10/15 周四</td><td>证券板块/创新药</td><td class="green mono">逆势拉升/震荡反弹</td><td><span class="badge badge-green">🟢 正面</span></td><td>证券板块逆势拉升（华林证券+8.3%）；医保局支持医药创新，创新药概念反弹</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="two-col">
+            <div class="card">
+                <div class="stock-header">
+                    <div class="stock-icon">📱</div>
+                    <div class="stock-name">小米集团 01810</div>
+                    <div class="stock-price green mono">HK$27.02（周+4.1%）</div>
+                </div>
+                <div class="news-item">
+                    <div class="news-item-header">
+                        <div class="news-item-title">🚀 澎程锁单催化延续，10/15逆势涨2.4%</div>
+                        <div>
+                            <span class="badge badge-green">🟢 正面</span>
+                            <span class="stars">★★★★☆</span>
+                        </div>
+                    </div>
+                    <div class="news-item-body">
+                        上周澎程系列上市首月锁单突破<strong>7万台</strong>、9月交付破4万的利好本周持续发酵。10/15恒生科技大跌2.94%、阿里美团京东齐跌的背景下，小米逆势收涨<strong>2.43%</strong>至HK$27.02，是科网权重中唯一红盘，盘中最高27.26。市场在杀跌中给予"汽车第二增长曲线"明确的成长溢价。
+                    </div>
+                    <div class="causal-chain">
+                        <div class="causal-chain-label">🔗 因果传导链</div>
+                        <span class="chain-step">澎程锁单7万+交付4万</span><span class="chain-arrow">→</span>
+                        <span class="chain-step">汽车成长逻辑验证</span><span class="chain-arrow">→</span>
+                        <span class="chain-step">大盘杀跌中资金抱团</span><span class="chain-arrow">→</span>
+                        <span class="chain-step green">📱 小米逆势+2.4%</span>
+                    </div>
+                </div>
+                <div class="highlight-block">
+                    <strong>💡 持仓视角：</strong>成本HK$49.29，现价27.02仍浮亏约<strong>-45%</strong>，是组合最大套牢盘。本周逆势上涨说明<strong>有独立催化的成长股能短期对冲高利率</strong>，但单日反弹不等于反转。<em>关键观察：</em>7万锁单能否在Q4转化为实际交付、产能爬坡是否顺利。
+                </div>
             </div>
+
+            <div class="card">
+                <div class="stock-header">
+                    <div class="stock-icon">⚡</div>
+                    <div class="stock-name">百通能源 001376</div>
+                    <div class="stock-price red mono">¥11.16（周-8.4%）</div>
+                </div>
+                <div class="news-item">
+                    <div class="news-item-header">
+                        <div class="news-item-title">📉 拟1.5亿收购鹤壁鼎炬热能，市场不买账</div>
+                        <div>
+                            <span class="badge badge-red">🔴 强负面</span>
+                            <span class="stars">★★★★★</span>
+                        </div>
+                    </div>
+                    <div class="news-item-body">
+                        10/14早盘公告，公司拟以<strong>1.5亿元</strong>收购鹤壁鼎炬热能100%股权，当日股价不涨反跌<strong>6.02%</strong>至11.55元，成交1.78亿元、近3日主力净流出超1400万；10/15午盘再跌<strong>3.38%</strong>至11.16元，盘中最低11.10。市场对这一区域集中供热资产收购的<strong>对价合理性、盈利增厚与资金/摊薄压力</strong>存疑，叠加此前定增价格下调、小盘电力股情绪低迷，呈空头加速态势。
+                    </div>
+                    <div class="causal-chain">
+                        <div class="causal-chain-label">🔗 因果传导链</div>
+                        <span class="chain-step">1.5亿收购公告</span><span class="chain-arrow">→</span>
+                        <span class="chain-step">市场担忧溢价/摊薄</span><span class="chain-arrow">→</span>
+                        <span class="chain-step">主力资金流出</span><span class="chain-arrow">→</span>
+                        <span class="chain-step red">⚡ 两日累跌约9%</span>
+                    </div>
+                </div>
+                <div class="highlight-block red">
+                    <strong>💡 持仓视角：</strong>成本¥15.021，现价11.16浮亏约<strong>-26%</strong>，本周是组合<strong>最大拖累</strong>。这是典型的"事件驱动下跌"而非单纯随大盘——需重点核实收购标的的盈利承诺、估值与公司资金来源。<em>风控提示：</em>若收购方案缺乏明确增厚逻辑、股价继续放量破位，应重新评估是否止损，避免小盘股流动性陷阱。
+                </div>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="card">
+                <div class="stock-header">
+                    <div class="stock-icon">🥇</div>
+                    <div class="stock-name">紫金矿业 601899</div>
+                    <div class="stock-price red mono">¥29.35（周-4.7%）</div>
+                </div>
+                <div class="news-item">
+                    <div class="news-item-header">
+                        <div class="news-item-title">📉 美国9月CPI超预期，金铜承压</div>
+                        <div>
+                            <span class="badge badge-red">🔴 负面</span>
+                            <span class="stars">★★★★☆</span>
+                        </div>
+                    </div>
+                    <div class="news-item-body">
+                        美国9月CPI同比<strong>3.7%</strong>、核心2.6%，均较上月反弹且高于预期，市场对10月加息概率回弹至33%、12月加息预期超90%。伦敦金现回落至$4,145附近，LME铜$14,436，有色板块本周承压。紫金10/15午盘跌2.10%至29.35元，但<strong>黄金板块在当日大盘杀跌中相对抗跌</strong>，显示央行购金（连续23个月增持）的底部支撑仍在。
+                    </div>
+                    <div class="causal-chain">
+                        <div class="causal-chain-label">🔗 因果传导链</div>
+                        <span class="chain-step">美CPI 3.7%超预期</span><span class="chain-arrow">→</span>
+                        <span class="chain-step">加息预期↑、实际利率高企</span><span class="chain-arrow">→</span>
+                        <span class="chain-step">金铜价格回调</span><span class="chain-arrow">→</span>
+                        <span class="chain-step red">🥇 紫金周-4.7%</span>
+                    </div>
+                </div>
+                <div class="highlight-block">
+                    <strong>💡 持仓视角：</strong>成本¥34.74，现价29.35浮亏约<strong>-15.5%</strong>。短期受高利率压制，但央行购金+去美元化的长期逻辑未变。<em>区分噪声与趋势：</em>加息预期反复是金价的短期扰动，真正的风险信号是金价跌破关键支撑且央行购金停止。
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="stock-header">
+                    <div class="stock-icon">🛒</div>
+                    <div class="stock-name">阿里巴巴-W 09988</div>
+                    <div class="stock-price red mono">HK$105.20（周-1.7%）</div>
+                </div>
+                <div class="news-item">
+                    <div class="news-item-header">
+                        <div class="news-item-title">🔄 南向资金抢筹与大盘杀跌的拉锯</div>
+                        <div>
+                            <span class="badge badge-yellow">🟡 震荡</span>
+                            <span class="stars">★★★☆☆</span>
+                        </div>
+                    </div>
+                    <div class="news-item-body">
+                        10/14南向资金净买入阿里<strong>11.9亿港元</strong>居首，股价涨3.08%至110.5；但10/15受外围大跌与美国CPI超预期拖累，恒生科技跌2.94%，阿里午盘回落<strong>4.8%</strong>至105.2，一日之内基本回吐前日涨幅，呈现典型的"资金底 vs 宏观顶"高波动拉锯。
+                    </div>
+                    <div class="causal-chain">
+                        <div class="causal-chain-label">🔗 因果传导链</div>
+                        <span class="chain-step">南向净买入11.9亿</span><span class="chain-arrow">→</span>
+                        <span class="chain-step">10/14反弹+3.1%</span><span class="chain-arrow">→</span>
+                        <span class="chain-step">外围/CPI利空</span><span class="chain-arrow">→</span>
+                        <span class="chain-step red">🛒 10/15回落-4.8%</span>
+                    </div>
+                </div>
+                <div class="highlight-block">
+                    <strong>💡 持仓视角：</strong>成本HK$171.266，现价105.2浮亏约<strong>-38.6%</strong>，深套。南向资金持续买入说明内资认可估值，但短期难摆脱恒科beta。<em>关键：</em>在大盘企稳前，阿里的反弹更可能是资金博弈而非趋势反转。
+                </div>
+            </div>
+        </div>
+
+        <div class="two-col">
+            <div class="card">
+                <div class="stock-header">
+                    <div class="stock-icon">🏦</div>
+                    <div class="stock-name">证券保险ETF 512070</div>
+                    <div class="stock-price red mono">¥0.753（周-1.4%）</div>
+                </div>
+                <div class="news-item">
+                    <div class="news-item-header">
+                        <div class="news-item-title">📈 10/15证券板块逆势拉升</div>
+                        <div>
+                            <span class="badge badge-yellow">🟡 中性偏多</span>
+                            <span class="stars">★★☆☆☆</span>
+                        </div>
+                    </div>
+                    <div class="news-item-body">
+                        本周随大盘小幅回调，10-14收0.753（-0.66%）。但10/15大盘杀跌中<strong>证券板块逆势拉升</strong>，华林证券盘中涨8.29%、锦龙股份+4.7%、首创证券+3.4%，证券ETF（516200）跟踪指数仅微跌0.09%，显示市场对"活跃资本市场/政策托底"仍有预期。作为高beta的牛市期权，该ETF在大盘下跌中表现出一定韧性。
+                    </div>
+                    <div class="causal-chain">
+                        <div class="causal-chain-label">🔗 因果传导链</div>
+                        <span class="chain-step">大盘杀跌</span><span class="chain-arrow">→</span>
+                        <span class="chain-step">政策托底预期升温</span><span class="chain-arrow">→</span>
+                        <span class="chain-step">证券板块逆势</span><span class="chain-arrow">→</span>
+                        <span class="chain-step green">🏦 相对抗跌</span>
+                    </div>
+                </div>
+                <div class="highlight-block">
+                    <strong>💡 持仓视角：</strong>成本¥0.796，现价0.753浮亏约<strong>-5.4%</strong>，仓位50万份。证券保险是"牛市期权"——大盘不涨它不涨，但一旦行情转暖弹性最大。当前弱势中持有它=为行情反转买的低成本保险。
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="stock-header">
+                    <div class="stock-icon">💊</div>
+                    <div class="stock-name">创新药ETF 159992</div>
+                    <div class="stock-price red mono">¥0.810（周-3.9%）</div>
+                </div>
+                <div class="news-item">
+                    <div class="news-item-header">
+                        <div class="news-item-title">🏥 医保局会议支持医药创新，10/15概念反弹</div>
+                        <div>
+                            <span class="badge badge-green">🟢 正面</span>
+                            <span class="stars">★★★☆☆</span>
+                        </div>
+                    </div>
+                    <div class="news-item-body">
+                        10/13国家医保局召开会议，要求<strong>积极支持医药科技创新</strong>，探索建立医疗服务价格预立项制度，支持更多医药新技术新产品加快进入临床规模化应用。10/15早盘创新药概念震荡反弹，贝瑞基因涨停，金石亚药、三元基因等跟涨。该ETF近三月回调约7.4%，本周随大盘续跌，但政策催化开始出现。
+                    </div>
+                    <div class="causal-chain">
+                        <div class="causal-chain-label">🔗 因果传导链</div>
+                        <span class="chain-step">医保局支持医药创新</span><span class="chain-arrow">→</span>
+                        <span class="chain-step">创新药支付/放量预期改善</span><span class="chain-arrow">→</span>
+                        <span class="chain-step">板块情绪修复</span><span class="chain-arrow">→</span>
+                        <span class="chain-step green">💊 概念逆势反弹</span>
+                    </div>
+                </div>
+                <div class="highlight-block">
+                    <strong>💡 持仓视角：</strong>成本¥0.852，现价0.810浮亏约<strong>-4.9%</strong>，仓位46万份。创新药是典型的"政策敏感+高景气"方向，与资源股、科网的相关性较低，承担组合分散功能。<em>关注：</em>医保谈判/商保支付政策的落地节奏。
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🔍 新闻 vs 价格复盘（本周逻辑验证）</div>
+            <p style="font-size:16px;color:#9a9a9a;margin-bottom:20px;">验证：这周的新闻，市场真的按这个逻辑走了吗？</p>
+            <table class="review-table">
+                <thead>
+                    <tr><th>逻辑判断</th><th>新闻事件</th><th>实际市场反应</th><th>验证结果</th><th>教训</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>收购扩张通常利好</td>
+                        <td>百通拟1.5亿收购鹤壁鼎炬热能</td>
+                        <td>股价反跌6%，次日再跌3.4%</td>
+                        <td><span class="badge badge-red">❌ 不成立</span></td>
+                        <td>小盘股在弱市中，市场对"花钱收购"先问对价与摊薄，不会无脑买单</td>
+                    </tr>
+                    <tr>
+                        <td>高利率压制成长/资源</td>
+                        <td>美CPI 3.7%超预期，加息预期回升</td>
+                        <td>10/15恒科-2.94%、紫金-2.1%、阿里-4.8%</td>
+                        <td><span class="badge badge-green">✅ 正确</span></td>
+                        <td>加息预期是本周全球资产的总开关，资源与科网都难幸免</td>
+                    </tr>
+                    <tr>
+                        <td>强个股催化能对冲大盘</td>
+                        <td>小米澎程交付逻辑延续</td>
+                        <td>科网齐跌中小米逆势+2.4%</td>
+                        <td><span class="badge badge-green">✅ 正确</span></td>
+                        <td>独立基本面催化是弱市中最稀缺的alpha，与旧站小米+9.64%经验一致</td>
+                    </tr>
+                    <tr>
+                        <td>政策托底利好非银/医药</td>
+                        <td>证券板块逆势拉升、医保局支持创新药</td>
+                        <td>512070相对抗跌，159992概念反弹</td>
+                        <td><span class="badge badge-green">✅ 正确</span></td>
+                        <td>大盘杀跌时，资金会向"政策受益+低估值"方向避险</td>
+                    </tr>
+                    <tr>
+                        <td>南向资金买入=见底信号</td>
+                        <td>10/14南向净买入阿里11.9亿</td>
+                        <td>10/14涨3.1%，但10/15即回落4.8%</td>
+                        <td><span class="badge badge-yellow">⚠️ 部分对</span></td>
+                        <td>单日资金流入能托一天，但对抗不了宏观利空，别把资金博弈当趋势反转</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="highlight-block" style="margin-top:20px;">
+                <strong>📊 本周复盘胜率：</strong>5个判断中 ✅正确3个、⚠️部分对1个、❌不成立1个 → <strong>正确率60%，含部分对达80%</strong><br>
+                <strong>核心教训：</strong><em>ThePit首期周报最大的警示是<strong>百通能源的"收购利好"变成了组合最大拖累</strong>——事件驱动的小盘股，公告出来第一时间要做的是核实对价与摊薄，而不是默认利好。同时本周再次验证了旧站的经验：高利率宏观压制下，只有"自身强催化（小米）或政策托底（证券/创新药）"的标的能逆势。组合当前六个持仓中，没有一个是加息受益方向，这是需要正视的结构性敞口。</em>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 下周关注（2026.10.16 - 10.23）</div>
+            <div class="highlight-block red">
+                <strong>下周核心矛盾：</strong>美国9月CPI超预期后，市场进入"加息预期再定价"阶段，焦点是<strong>美联储官员表态、美国10月加息概率与长债拍卖</strong>；国内则看<strong>稳增长政策、社融低迷后的货币宽松信号</strong>。百通能源收购案的<strong>交易细节（对价、业绩承诺、资金来源）</strong>是组合层面最需要立刻核实的个股事件。<br>
+                <em>Dalio提示：滞胀+高利率下，本周-2.0%的回调仍属温和，不要在恐慌中割肉防御性资产，但也不要给弱市中的事件利空（百通）找借口。</em>
+            </div>
+            <table style="margin-top:20px;">
+                <thead><tr><th>日期</th><th>事件</th><th>影响标的</th><th>传导链路</th><th>我的预判</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td class="mono">10/16 周五</td>
+                        <td><strong>百通能源收购方案细节/交易所问询</strong></td>
+                        <td>⚡ 百通能源（直接）</td>
+                        <td>对价/业绩承诺/资金来源→市场信任→股价能否止跌</td>
+                        <td><span class="badge badge-red">🔴 重点核实，逻辑不清则风控优先</span></td>
+                    </tr>
+                    <tr>
+                        <td class="mono">下周</td>
+                        <td><strong>美联储官员讲话+美债长端拍卖</strong></td>
+                        <td>🥇紫金 📱小米 🛒阿里</td>
+                        <td>加息预期→美元/实际利率→金铜与成长估值</td>
+                        <td><span class="badge badge-orange">🟠 若鹰派强化，资源/科网继续承压</span></td>
+                    </tr>
+                    <tr>
+                        <td class="mono">下周</td>
+                        <td><strong>中国LPR/稳增长政策窗口</strong></td>
+                        <td>🏦证券保险 +全部A股</td>
+                        <td>社融7.1%低迷→宽松预期→券商/大盘beta</td>
+                        <td><span class="badge badge-yellow">🟡 政策托底预期是非银催化</span></td>
+                    </tr>
+                    <tr>
+                        <td class="mono">下周</td>
+                        <td><strong>医保创新药支持政策落地</strong></td>
+                        <td>💊 创新药ETF</td>
+                        <td>支付/放量政策→创新药景气→ETF反弹</td>
+                        <td><span class="badge badge-green">🟢 关注医保谈判与商保细则</span></td>
+                    </tr>
+                    <tr>
+                        <td class="mono">全周</td>
+                        <td><strong>小米澎程交付转化/Q3财报临近</strong></td>
+                        <td>📱 小米（直接）</td>
+                        <td>锁单→交付→营收→估值修复</td>
+                        <td><span class="badge badge-green">🟢 跟踪7万锁单的交付兑现率</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🎯 本周情绪标签与影响程度</div>
+            <div class="two-col">
+                <div>
+                    <h4 style="font-size:17px;margin-bottom:14px;color:#34d399;">🟢 正面因素</h4>
+                    <div style="font-size:16px;line-height:2.2;color:#9a9a9a;">
+                        <div>• 小米大盘杀跌中逆势+2.4% <span class="yellow">★★★★☆</span></div>
+                        <div>• 小米澎程锁单7万催化延续 <span class="yellow">★★★★☆</span></div>
+                        <div>• 医保局支持医药科技创新 <span class="yellow">★★★☆☆</span></div>
+                        <div>• 10/15证券板块逆势拉升 <span class="yellow">★★★☆☆</span></div>
+                        <div>• 南向资金持续买入阿里 <span class="yellow">★★☆☆☆</span></div>
+                        <div>• 黄金板块杀跌中相对抗跌 <span class="yellow">★★☆☆☆</span></div>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="font-size:17px;margin-bottom:14px;color:#f87171;">🔴 负面因素</h4>
+                    <div style="font-size:16px;line-height:2.2;color:#9a9a9a;">
+                        <div>• 美CPI 3.7%超预期，加息预期回升 <span class="yellow">★★★★★</span></div>
+                        <div>• 百通收购利空，周-8.4% <span class="yellow">★★★★★</span></div>
+                        <div>• 10/15恒科-2.94%、阿里-4.8% <span class="yellow">★★★★☆</span></div>
+                        <div>• 中国M1降至3.2%、社融7.1% <span class="yellow">★★★★☆</span></div>
+                        <div>• 金铜有色本周承压 <span class="yellow">★★★☆☆</span></div>
+                        <div>• 百通空头加速、流动性偏弱 <span class="yellow">★★★☆☆</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="highlight-block red" style="margin-top:20px;">
+                <strong>📊 情绪综合判断：</strong>本周负面因素（美国加息预期+百通事件利空+国内信用数据低迷）占主导，组合<strong style="color:#f87171;">-2.0%</strong>。但结构上有亮点：小米逆势、证券/创新药政策催化，说明资金并非全面撤离，而是在<strong>从"高利率受损方向"向"有独立催化/政策托底方向"切换</strong>。<em>操作建议：① 立即核实百通收购方案细节，这是唯一需要主动决策的个股风险；② 不为高利率短期扰动减仓紫金/创新药的战略底仓；③ 小米、阿里深套盘不追高也不恐慌割肉，等Q3财报与交付数据；④ 现金仅¥2,735，组合几乎满仓，短期不宜再加杠杆，保留对百通风险的应对弹性。</em>
+            </div>
+        </div>
+
+        <div class="card" style="font-size:14px;color:#7a7a7a;">
+            <strong>📎 数据口径说明：</strong>个股价格为2026-10-15午间（A股11:30/港股11:59休市），本周涨跌以10-09收盘为基准；ETF因午间场内实时价未获双源确认，本周涨跌以10-14收盘净值/市价计算（512070收0.753、159992收0.810），10-15盘中走势为板块定性描述，收盘后将在每日数据中更新精确数值。港股按¥0.86/港元折算。
         </div>
     </div>
 </body>
